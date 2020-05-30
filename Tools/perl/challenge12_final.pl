@@ -42,5 +42,5 @@ use strict;
 		print "Computed maximum clock frequency isn't avaiable in the report.\n";	
 	}
     }
-
+    close(FH);
 
