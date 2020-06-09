@@ -7,9 +7,9 @@ def find(txt):
     for line in txt.readlines():
         if 'frequency' in line:
             frequency_MHz = line.split()
-            print ("\nMaximum frquency in MHz is: ",frequency_MHz[7],"MHz")
+            print ("\nMaximum frequency in MHz is: ",frequency_MHz[7],"MHz")
             frequency = float("".join(frequency_MHz[7]))
-            print ("\nMaximum frquency in GHz is: ",round (frequency/(1000),3),"GHz")
+            print ("\nMaximum frequency in GHz is: ",round (frequency/(1000),3),"GHz")
             break   
             
     if 'frequency' not in line:        
