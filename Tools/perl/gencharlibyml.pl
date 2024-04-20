@@ -1,5 +1,8 @@
 #!/usr/bin/perl -w
 
+# This tool is automatically used by the StdCellLib flow, it is called by librecells.pl
+# If you want to run it manually, run it from the CATALOG directory and make sure that the PDK environment variable is set.
+
 open OUT,">libresilicon-charlib.yml";
 
 
