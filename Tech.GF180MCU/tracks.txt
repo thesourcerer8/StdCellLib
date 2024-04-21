@@ -1,0 +1,14 @@
+1 Track: 0.56 um
+
+Tracks per Cell 7
+Cell Height (um) 3.92
+
+Tracks per Cell 9
+Cell Height (um) 5.04
+
+Tracks per Cell 11
+Cell Height (um) 6.16
+
+Tracks per Cell 13
+Cell Height (um) 7.28
+
