@@ -283,12 +283,12 @@ minimum_enclosure = {
     # Via enclosure
     (l_ndiffusion, l_ndiff_contact): 70*nm, # (CO.4)
     (l_pdiffusion, l_pdiff_contact): 70*nm, # (CO.4)
-    (l_poly, l_poly_contact): 80*nm, # (licon.8a) !!! OR (licon.4) ?
-    (l_metal1, l_pdiff_contact): 80*nm, # (li.5)
-    (l_metal1, l_ndiff_contact): 80*nm, # (li.5)
-    (l_metal1, l_poly_contact): 80*nm, # (li.5)
+    (l_poly, l_poly_contact): 70*nm, # (CO.3 / CO.4)
+    (l_metal1, l_pdiff_contact): 60*nm, # (CO.6)
+    (l_metal1, l_ndiff_contact): 60*nm, # (CO.6)
+    (l_metal1, l_poly_contact): 60*nm, # (CO.6)
     (l_metal1, l_via1): 60*nm, # Vn.3
-    (l_metal2, l_via1): 100*nm, # V1.4i
+    (l_metal2, l_via1): 60*nm, # V1.4
 
     # l_*well must overlap l_*diffusion
     (l_nwell, l_pdiffusion): 430*nm, # (DF.7)
