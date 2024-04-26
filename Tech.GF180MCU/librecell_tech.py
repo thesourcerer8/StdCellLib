@@ -15,46 +15,67 @@ grid = 5 # grid basis
 um = 1000
 nm = 1
 
+targetvoltage="3.3V" # "3.3V" "5V" "6V" "10V"  # unfortunately 1.8V does not seem to be available on GF180
+# "5V" => Operating Voltage VDD = 1.62 - 5.5V according to https://gf180mcu-pdk.readthedocs.io/en/latest/digital/standard_cells/gf180mcu_fd_sc_mcu7t5v0/spec/electrical.html
+
+tracks=9
+
+use_deep_nwell = True
+
 # Scale transistor width.
 transistor_channel_width_sizing = 1
 
 # GDS2 layer numbers for final output.
-my_diffusion = (22, 0) # = ndiffusion+pdiffusion
-my_diffusion_label = (22, 0)
-my_diffusion_pin = (22, 0)
+# Keep those definitions always in mind: https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07.html
+# GDS2 layers are taken from: https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_04_1.html
+
+my_ndiffusion = (22, 0) # warning: ndiffusion+pdiffusion is on the same GDS2 layer, called COMP
+my_ndiffusion_label = (22, 0)
+my_ndiffusion_pin = (22, 0)
+my_pdiffusion = (22, 0) # warning: ndiffusion+pdiffusion is on the same GDS2 layer, called COMP
+my_pdiffusion_label = (22, 0)
+my_pdiffusion_pin = (22, 0)
+
 
 my_nwell = (21, 0)
 my_nwell_label = (21, 0)
 my_nwell_pin = (21, 0)
 
-my_pwell = (204, 0)
+my_dnwell = (12, 0)
 
-my_poly = (30, 0) # poly silicium for gates -> poly + ntransistor + ptransistor
+my_pwell = (204, 0) # LVPWELL / Pwell implant
+
+my_dualgate = (55, 0) # Dualgate / 6V Gate Oxide
+
+my_poly = (30, 0) # "Poly2" / POLY2 gate & interconnect /  poly silicium for gates -> poly + ntransistor + ptransistor
 my_poly_gate = (30, 0) # poly gates? Why do we have a second layer for gates?
 my_poly_label = (30, 0)
 
-my_mcon = (33, 0) 
+my_mcon = (33, 0) # Contact / Metal1 to Active or Poly2 contact
 my_metal1 = (34, 0)
 my_metal1_label = (34, 0)
 my_metal1_pin = (34, 0)
-my_via1 = (35, 0)
+my_via1 = (35, 0) # Metal2 to Metal1 contact
 my_metal2 = (36, 0)
 my_metal2_label = (36, 0)
 my_metal2_pin = (36, 0)
-my_via2 = (38, 0)
+my_via2 = (38, 0) # Metal3 to Metal2 contact
 my_metal3 = (42, 0)
 
-my_abutment_box = (63, 0) # prBndry  ???
+my_abutment_box = (63, 0) # Border
 
-my_pplus = (31,0) # TAP.DRAWING
-my_nplus = (32,0) # TAP.DRAWING
+my_pplus = (31,0) # P-Plus
+my_nplus = (32,0) # N-Plus
+
+my_sab = (49,0) # SAB / Unsalicided poly & active regions
+
 
 # lclayout internally uses its own layer numbering scheme.
 # For the final output the layers can be remapped with a mapping
 # defined in this dictioinary.
 output_map = {
-    l_ndiffusion: my_diffusion,
-    l_pdiffusion: my_diffusion,
+    l_ndiffusion: my_ndiffusion,
+    l_pdiffusion: my_pdiffusion,
     l_nwell: my_nwell, # [my_nwell, my_nwell2],  # Map l_nwell to two output layers.
     l_pwell: my_pwell,  # Output layer for pwell. Uncomment this if needed. For instance for twin-well processes.
     l_poly: my_poly,
@@ -142,52 +163,52 @@ output_writers = [
 routing_layers = {
     l_ndiffusion: '', # Allow adding shapes on diffusion layer but without using it for routing. This is used to automatically add the necessary enclosure around contacts.
     l_pdiffusion: '', # Allow adding shapes on diffusion layer but without using it for routing. This is used to automatically add the necessary enclosure around contacts.
-    l_poly: 'v',
+    l_poly: 'v', # We dont want horizontal rouing on poly
     l_metal1: 'hv',
     l_metal2: 'hv',
 }
 
 # Minimum spacing rules for layer pairs.
 min_spacing = {
-    (l_ndiffusion, l_ndiffusion): 360*nm, # DF.3a for 5V
-    #(l_ndiffusion, l_outline): 360/2*nm, # DF.3a for 5V
-    (l_pdiffusion, l_ndiffusion): 360*nm, # DF.3a for 5V
-    #(l_pdiffusion, l_outline): 360/2*nm, # DF.3a for 5V
-    (l_pdiffusion, l_pdiffusion): 360*nm, # DF.3a for 5V
-    (l_ndiffusion, l_poly_contact): 170*nm, # (CO.8)
-    (l_pdiffusion, l_poly_contact): 170*nm, # (CO.8)
-    (l_nwell, l_nwell): 740*nm, # NW.2a
-    (l_nwell, l_pwell): 0*nm, # NW.4
-    (l_pwell, l_pwell): 860*nm, # LPW.2b # If it would be the same potential, we could go down to 860*nm according to LPW.2b, if it is different potential we would have to go up to 1.7
+    (l_ndiffusion, l_ndiffusion): 280*nm if targetvoltage=='3.3V' else 360*nm, # DF.3a for 5V https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_06.html
+    #(l_ndiffusion, l_outline): 360/2*nm, # DF.3a for 5V https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_06.html
+    (l_pdiffusion, l_ndiffusion): 280*nm if targetvoltage=='3.3V' else 360*nm, # DF.3a for 5V https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_06.html
+    #(l_pdiffusion, l_outline): 360/2*nm, # DF.3a for 5V https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_06.html
+    (l_pdiffusion, l_pdiffusion): 280*nm if targetvoltage=='3.3V' else 360*nm, # DF.3a for 5V https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_06.html
+    (l_ndiffusion, l_poly_contact): 170*nm, # CO.8 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_13.html
+    (l_pdiffusion, l_poly_contact): 170*nm, # CO.8 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_13.html
+    (l_nwell, l_nwell): 600*nm if targetvoltage=='3.3V' else 740*nm, # NW.2a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_05.html
+    (l_nwell, l_pwell): 0*nm,   # NW.4 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_05.html
+    (l_pwell, l_pwell): 860*nm, # LPW.2b # If it would be the same potential, we could go down to 860*nm according to LPW.2b, if it is different potential we would have to go up to 1.7 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_04.html
     #(l_poly, l_ndiffusion): 300*nm, # PL.5b This is only needed when the poly isn't rectangular, and it doesn't mean the poly that is directly on top of diffusion
-    #(l_poly, l_pdiffusion): 300*nm, # PL.5b
-    (l_poly, l_poly): 240*nm, # PL.3a
-    #(l_poly, l_outline): 240/2*nm, # PL.3a 
-    (l_poly, l_pdiff_contact): 150*nm, # CO.7
-    (l_poly, l_ndiff_contact): 150*nm, # CO.7
-    (l_pdiff_contact, l_pdiff_contact): 250*nm, # CO.2a-CO.6   #!!! HIER WEITERMACHEN
+    #(l_poly, l_pdiffusion): 300*nm, # PL.5b https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_08.html
+    (l_poly, l_poly): 240*nm, # PL.3a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_08.html
+    #(l_poly, l_outline): 240/2*nm, # PL.3a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_08.html
+    (l_poly, l_pdiff_contact): 150*nm, # CO.7 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_13.html
+    (l_poly, l_ndiff_contact): 150*nm, # CO.7 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_13.html
+    (l_pdiff_contact, l_pdiff_contact): 250*nm, # CO.2a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_13.html
     #(l_pdiff_contact, l_outline): 270/2*nm, # (difftap.3)
-    (l_ndiff_contact, l_ndiff_contact): 250*nm, # CO.2a-CO.6
+    (l_ndiff_contact, l_ndiff_contact): 250*nm, # CO.2a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_13.html
     #(l_ndiff_contact, l_outline): 270/2*nm, # (difftap.3)
-    (l_pdiff_contact, l_ndiff_contact): 250*nm, # CO.2a-CO.6
-    (l_metal1, l_metal1): 250*nm, # Mn.2a ! WARNING: Spacing to huge_met1 (>=10um) needs to be 300nm !
+    (l_pdiff_contact, l_ndiff_contact): 250*nm, # CO.2a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_13.html
+    (l_metal1, l_metal1): 230*nm, # Mn.2a ! This was 250nm?!? DRC rule says 230nm. WARNING: Spacing to huge_met1 (>=10um) needs to be 300nm ! But we most likely wont have huge metal1 inside a standard cell https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_14.html
     #(l_metal1, l_outline): 170/2*nm, # (li.3) # !!!! WARNING: Spacing to huge_met1 (>=?nm) needs to be 280nm !
 #    (l_metal1, l_border_vertical): 190*nm, # To move the VIAs at the right place
 #    (l_metal2, l_border_vertical): 190*nm, # To move the VIAs at the right place
 
-    (l_metal2, l_metal2): 280*nm, # Mn.2a
+    (l_metal2, l_metal2): 280*nm, # Mn.2a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_14.html
     # We need metal2 at the border for the power lanes, so we dont put border rules
-    (l_via1, l_via1): 260*nm, # Vn.2a
+    (l_via1, l_via1): 260*nm, # Vn.2a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_15.html
     #(l_via1, l_outline): 190/2*nm, # (ct.2)
     #(l_via1, l_diff_contact): 2*l, # NO RULES FOR LICON-MCON spacing found
     #(l_via1, l_ndiffusion): 2*l, # NO RULES FOR MCON-DIFF spacing found
     #(l_via1, l_pdiffusion): 2*l, # NO RULES FOR MCON-DIFF spacing found
-    (l_poly_contact, l_pdiff_contact): 280*nm, # CO.2b
+    (l_poly_contact, l_pdiff_contact): 250*nm, # CO.2a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_13.html
     #(l_poly_contact, l_outline): 170/2*nm, # (licon.2)
-    (l_poly_contact, l_ndiff_contact): 170*nm, # CO.2b
-    (l_ndiffusion, l_pplus): 75*nm,
-    (l_pdiffusion, l_nplus): 75*nm,
-    (l_nplus, l_nplus): 400*nm, # NP.2
+    (l_poly_contact, l_ndiff_contact): 250*nm, # CO.2a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_13.html
+    (l_ndiffusion, l_pplus): 80*nm, # OR IS IT 160nm??? PP.3 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_10.html
+    (l_pdiffusion, l_nplus): 80*nm, # OR IS IT 160nm??? NP.3 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_09.html
+    (l_nplus, l_nplus): 400*nm, # NP.2 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_09.html
 }
 
 # Layer for the pins.
@@ -198,14 +219,14 @@ power_layer = [l_metal1, l_metal2] # lclayout.metal2 = sky130.metal1
 
 # Layers that can be connected/merged without changing the schematic.
 # This can be used to resolve spacing/notch violations by just filling the space.
-connectable_layers = {l_nwell, l_pwell, l_poly, l_metal1}
-# Width of the gate polysilicon stripe.
+connectable_layers = {l_pwell, l_poly, l_metal1} # l_nwell
+# Width of the polysilicon stripe which forms the gate.
 # is reused as the minimum_width for the l_poly layer
-gate_length_nmos = 500*nm # PL.2
-gate_length_pmos = 600*nm # PL.2
+gate_length_nmos = 280*nm if targetvoltage=='3.3V' else 500*nm if targetvoltage=='5V' else 550*nm # PL.2 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_08.html
+gate_length_pmos = 280*nm if targetvoltage=='3.3V' else 600*nm if targetvoltage=='5V' else 700*nm # PL.2 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_08.html
 
 # Minimum length a polysilicon gate must overlap the silicon.
-gate_extension = 220*nm # PL.4
+gate_extension = 220*nm # PL.4 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_08.html
 
 # Minimum distance of active area to upper or lower boundary of the cell. Basically determines the y-offset of the transistors.
 transistor_offset_y = 340*nm # !!! This likely needs to be tuned later on # The 150/2*nm might have to be removed
@@ -213,8 +234,8 @@ transistor_offset_y = 340*nm # !!! This likely needs to be tuned later on # The 
 # Standard cell dimensions.
 # A 'unit cell' corresponds to the dimensions of the smallest possible cell. Usually an inverter.
 # `unit_cell_width` also corresponds to the pitch of the gates because gates are spaced on a regular grid.
-unit_cell_width = 2*560*nm # (unit SITE) # measured from gf180mcu_fd_sc_mcu9t5v0__inv_1
-unit_cell_height = 5040*nm # (unit SITE) # measured from gf180mcu_fd_sc_mcu9t5v0__inv_1
+unit_cell_width = 2*560*nm # (unit SITE) # measured from gf180mcu_fd_sc_mcu9t5v0__inv_1 -> 1.12 um = 2 Tracks = 2*0.56 nm
+unit_cell_height = tracks*560*nm # (unit SITE) # measured from gf180mcu_fd_sc_mcu9t5v0__inv_1 -> 5.04 um = 9 Tracks = 9*0.56 nm
 
 #assert unit_cell_height >= 16*um, "minimum 16um due to pwell width + nwell-pwell spacing"
 # due to nwell size and spacing requirements routing_grid_pitch_y * 8 # * 8
@@ -227,98 +248,101 @@ routing_grid_pitch_y = 135*nm # unit_cell_height // 8 // 2
 grid_offset_x = routing_grid_pitch_x
 grid_offset_y = 0 # (routing_grid_pitch_y // 2 ) -10
 
-# Width of power rail.
-power_rail_width = 480*nm # compatible to SKY130 #  3*130*nm # decided by the standard cell library architect
+# Width of power rail metal.
+power_rail_width = 480*nm # decided by the standard cell library architect - might need to be interoperable to other cells
 
-# Minimum width of polysilicon gate stripes.
-# It increases w and l from the spice netlist, so it must be width from the spice netlist
-minimum_gate_width_nfet = 300*nm # PL.2
-minimum_gate_width_pfet = 300*nm # PL.2
+
+# Minimum gate widths of transistors, i.e. minimal widths of l_ndiffusion and l_pdiffusion (width of COMP).
+# It increases w from the spice netlist, so it must be width from the spice netlist
+minimum_gate_width_nfet = 220*nm if targetvoltage=='3.3V' else 300*nm # DF.2 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_06.html
+minimum_gate_width_pfet = 220*nm if targetvoltage=='3.3V' else 300*nm # DF.2 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_06.html
 
 # Minimum width for pins.
 minimum_pin_width = 220*nm 
 
 # Width of routing wires.
 wire_width = {
-    l_ndiffusion: 150*nm, # (difftap.1)
-    l_pdiffusion: 150*nm, # (difftap.2)
-    l_poly: 390*nm,   # (poly.1a) -> Magic requires 180nm -> But we want 390nm to avoid notches
-    l_metal1: 230*nm, # Mn.1
-    l_metal2: 280*nm, # Mn.1
+    l_ndiffusion: 220*nm if targetvoltage=='3.3V' else 300*nm, # DF.1a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_06.html
+    l_pdiffusion: 220*nm if targetvoltage=='3.3V' else 300*nm, # DF.1a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_06.html
+    l_poly: 280*nm if targetvoltage=='3.3V' else 390*nm,   # PL.1 -> Magic requires 180nm -> But we want 390nm to avoid notches # Checked it again on 2024-04-23 and yes, 390nm makes sense. https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_08.html
+    l_metal1: 230*nm, # Mn.1 voltage independent https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_14.html
+    l_metal2: 280*nm, # Mn.1 voltage independent https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_14.html
 }
 
 # Width of horizontal routing wires (overwrites `wire_width`).
 wire_width_horizontal = {
-    l_ndiffusion: 150*nm, # (difftap.1)
-    l_pdiffusion: 150*nm, # (difftap.2)
-    l_poly: 200*nm,   # PL.1
-    l_metal1: 230*nm, # Mn.1
-    l_metal2: 280*nm, # Mn.1
+    l_ndiffusion: 220*nm if targetvoltage=='3.3V' else 300*nm, # DF.1a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_06.html
+    l_pdiffusion: 220*nm if targetvoltage=='3.3V' else 300*nm, # DF.1a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_06.html
+    l_poly: 180*nm if targetvoltage=='3.3V' else 200*nm,  # PL.1 -> Magic requires 180nm -> But we want 390nm to avoid notches # Checked it again on 2024-04-23 and yes, 390nm makes sense. https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_08.html
+    l_metal1: 230*nm, # Mn.1 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_14.html
+    l_metal2: 280*nm, # Mn.1 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_14.html
 }
 
 # Side lengths of vias (square shaped).
 via_size = {
-    l_poly_contact: 230*nm, # CO.1 + magic extensions 2*CO.6
-    l_ndiff_contact: 230*nm, # CO.1 + magic extension 2*CO.6
-    l_pdiff_contact: 230*nm, # CO.1 + magic extension 2*CO.6
-    l_via1: 260*nm, # Vn.1
-    #l_via2: 260*nm # Vn.1
+    l_poly_contact: 230*nm, # CO.1 requires 220nm + magic extensions 2*CO.6 - so the GDS2 file should be 220nm in the end I guess? https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_13.html
+    l_ndiff_contact: 230*nm, # CO.1 requires 220nm + magic extension 2*CO.6 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_13.html
+    l_pdiff_contact: 230*nm, # CO.1 requires 220nm + magic extension 2*CO.6 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_13.html
+    l_via1: 260*nm, # Vn.1 # Why do we not have an extension here like with poly, ndiff and pdiff? https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_15.html
+    #l_via2: 260*nm # Vn.1 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_15.html
 }
 
 # Minimum width rules.
 minimum_width = {
-    l_ndiffusion: 300*nm, # DF.1a
-    l_pdiffusion: 300*nm, # DF.1a
-    l_poly: 500*nm, # PL.2
-    l_metal1: 230*nm, # Mn.1
-    l_metal2: 280*nm, # Mn.1
-    l_nwell: 900*nm, # NW.1a
-    l_pwell: 740*nm, # LPW.1
-    l_nplus: 400*nm # NP.1
+    l_ndiffusion: 220*nm if targetvoltage=='3.3V' else 300*nm, # DF.1a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_06.html  
+    l_pdiffusion: 220*nm if targetvoltage=='3.3V' else 300*nm, # DF.1a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_06.html  
+    l_poly: 280*nm if targetvoltage=='3.3V' else 500*nm if targetvoltage=='5V' else 550*nm, # PL.2 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_08.html
+    l_metal1: 230*nm, # Mn.1 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_14.html
+    l_metal2: 280*nm, # Mn.1 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_14.html
+    l_nwell: 860*nm, # NW.1a (covering 3.3V, 5V, 6V) https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_05.html
+    l_pwell: 600*nm if targetvoltage=='3.3V' else 740*nm, # LPW.1 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_04.html
+    l_nplus: 400*nm # NP.1 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_09.html 
 }
 
 # Minimum enclosure rules.
 # Syntax: {(outer layer, inner layer): minimum enclosure, ...}
 minimum_enclosure = {
     # Via enclosure
-    (l_ndiffusion, l_ndiff_contact): 70*nm, # (CO.4)
-    (l_pdiffusion, l_pdiff_contact): 70*nm, # (CO.4)
-    (l_poly, l_poly_contact): 70*nm, # (CO.3 / CO.4)
-    (l_metal1, l_pdiff_contact): 60*nm, # (CO.6)
-    (l_metal1, l_ndiff_contact): 60*nm, # (CO.6)
-    (l_metal1, l_poly_contact): 60*nm, # (CO.6)
-    (l_metal1, l_via1): 60*nm, # Vn.3
-    (l_metal2, l_via1): 60*nm, # V1.4
-
+    (l_ndiffusion, l_ndiff_contact): 70*nm, # (CO.4) https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_13.html
+    (l_pdiffusion, l_pdiff_contact): 70*nm, # (CO.4) https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_13.html
+    (l_poly, l_poly_contact): 70*nm, # (CO.3) https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_13.html
+    # The minimum is 5nm, but since we want to do the overlap symmetrical to achieve reproducibility, when we use 40nm we evade the rule that we would have to use 60nm on the other side:
+    (l_metal1, l_pdiff_contact): 40*nm, # (CO.6) https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_13.html
+    (l_metal1, l_ndiff_contact): 40*nm, # (CO.6) https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_13.html
+    (l_metal1, l_poly_contact): 40*nm, # (CO.6) https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_13.html
+    # The minimum is 5nm, but since we want to do the overlap symmetrical to achieve reproducibility, when we use 40nm we evade the rule that we would have to use 60nm on the other side:
+    (l_metal1, l_via1): 40*nm, # Vn.3 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_15.html
+    (l_metal2, l_via1): 40*nm, # V1.4 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_15.html
     # l_*well must overlap l_*diffusion
-    (l_nwell, l_pdiffusion): 430*nm, # (DF.7)
-    (l_pwell, l_ndiffusion): 430*nm, # (DF.7)
-    (l_abutment_box, l_nwell): 0, # The nwell and pwell should not go beyond the abutment
-    (l_abutment_box, l_pwell): 0,
-    (l_nplus, l_ndiff_contact): 230*nm, # NP.5a  Implicitly encodes the size of well taps.
-    (l_pplus, l_pdiff_contact): 230*nm, # PP.5a  Implicitly encodes the size of well taps.
+
+### CONTINUE HERE
+
+    (l_nwell, l_pdiffusion): 430*nm if targetvoltage=='3.3V' else 600*nm, # (DF.4c) https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_06.html
+#    (l_pwell, l_ndiffusion): 430*nm if targetvoltage=='3.3V' else 600*nm, # I CANNOT FIND A RULE FOR THIS OUTSIDE DNWELL https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_06.html
+    (l_nplus, l_ndiff_contact): 230*nm, # NP.5a  Implicitly encodes the size of well taps. https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_09.html
+    (l_pplus, l_pdiff_contact): 230*nm, # PP.5a  Implicitly encodes the size of well taps. https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_10.html
     #(l_dnwell, l_pwell): 2500*nm,
 }
 
 # Minimum notch rules.
 minimum_notch = {
-    l_ndiffusion: 130*nm,
-    l_pdiffusion: 130*nm,
-    l_poly: 180*nm,
-    l_metal1: 130*nm,
-    l_metal2: 130*nm,
-    l_nwell: 5*130*nm,
-    l_pwell: 5*130*nm,
+    l_ndiffusion: 280*nm if targetvoltage=='3.3V' else 360*nm, # DF.3a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_06.html
+    l_pdiffusion: 280*nm if targetvoltage=='3.3V' else 360*nm, # DF.3a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_06.html
+    l_poly: 240*nm, # PL.3a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_08.html
+    l_metal1: 230*nm, # Mn.2a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_14.html
+    l_metal2: 280*nm, # Mn.2a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_14.html
+    l_nwell: 600*nm if targetvoltage=='3.3V' else 740*nm, # NW.2a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_05.html
+    l_pwell: 860*nm, # LPW.2b https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_04.html
 }
 
 # Minimum area rules.
 min_area = {
-    l_ndiffusion: 0.2025 * um * um,
-    l_pdiffusion: 0.2025 * um * um,
-    l_metal1: 0.1444 * um * um ,# Mn.3
-    #l_metal2: 0.1444 * um * um ,# Mn.3  - We don't need to enforce it here since that will be done by Openlane
-    #l_nplus: 0.35 * um * um, #NP.8a
-    #l_pplus: 0.35 * um * um, #PP.8a
+    l_ndiffusion: 0.2025 * um * um, # DF.9 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_06.html
+    l_pdiffusion: 0.2025 * um * um, # DF.9 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_06.html
+    l_metal1: 0.1444 * um * um ,# Mn.3 https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_14.html
+    #l_metal2: 0.1444 * um * um ,# Mn.3  - We don't need to enforce it here since that will be done by Openlane https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_14.html
+    l_nplus: 0.35 * um * um, #NP.8a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_09.html
+    l_pplus: 0.35 * um * um, #PP.8a https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07_10.html 
 }
 
 # ROUTING #
@@ -372,10 +396,10 @@ if( min_spacing[(l_ndiff_contact, l_ndiff_contact)] < min_spacing[(l_ndiffusion,
         print("Minimum Spacing "+str(min_spacing[(l_ndiff_contact, l_ndiff_contact)])+" for ndiff_contact too small because of ndiffusion, minimum should be "+ str(newmin)+"(="+str(min_spacing[(l_ndiffusion,l_ndiffusion)])+"+2*"+str(minimum_enclosure[(l_ndiffusion, l_ndiff_contact)])+") Fixing minimum_spacing")
         min_spacing[(l_ndiff_contact, l_ndiff_contact)]=newmin
 
-if( min_spacing[(l_pdiff_contact, l_ndiff_contact)] < min_spacing[(l_pdiffusion,l_ndiffusion)]+minimum_enclosure[(l_ndiffusion, l_ndiff_contact)]+minimum_enclosure[(l_pdiffusion, l_pdiff_contact)]):
-        newmin=min_spacing[(l_pdiffusion,l_ndiffusion)]+minimum_enclosure[(l_ndiffusion, l_ndiff_contact)]+minimum_enclosure[(l_pdiffusion, l_pdiff_contact)]
-        print("Minimum Spacing "+str(min_spacing[(l_ndiff_contact, l_ndiff_contact)])+" for pdiff_contact - ndiff_contact too small because of ndiffusion, minimum should be "+ str(newmin)+"(="+str(min_spacing[(l_pdiffusion,l_ndiffusion)])+"+"+str(minimum_enclosure[(l_ndiffusion, l_ndiff_contact)])+"+"+str(minimum_enclosure[(l_pdiffusion, l_pdiff_contact)])+") Fixing minimum_spacing")
-        min_spacing[(l_pdiff_contact, l_ndiff_contact)]=newmin
+#if( min_spacing[(l_pdiff_contact, l_ndiff_contact)] < min_spacing[(l_pdiffusion,l_ndiffusion)]+minimum_enclosure[(l_ndiffusion, l_ndiff_contact)]+minimum_enclosure[(l_pdiffusion, l_pdiff_contact)]):
+#        newmin=min_spacing[(l_pdiffusion,l_ndiffusion)]+minimum_enclosure[(l_ndiffusion, l_ndiff_contact)]+minimum_enclosure[(l_pdiffusion, l_pdiff_contact)]
+#        print("Minimum Spacing "+str(min_spacing[(l_ndiff_contact, l_ndiff_contact)])+" for pdiff_contact - ndiff_contact too small because of ndiffusion, minimum should be "+ str(newmin)+"(="+str(min_spacing[(l_pdiffusion,l_ndiffusion)])+"+"+str(minimum_enclosure[(l_ndiffusion, l_ndiff_contact)])+"+"+str(minimum_enclosure[(l_pdiffusion, l_pdiff_contact)])+") Fixing minimum_spacing")
+#        min_spacing[(l_pdiff_contact, l_ndiff_contact)]=newmin
 
 if((l_poly_contact, l_poly_contact) in min_spacing and  min_spacing[(l_poly_contact, l_poly_contact)] < min_spacing[(l_poly,l_poly)]+2*minimum_enclosure[(l_poly, l_poly_contact)]):
         newmin=min_spacing[(l_poly,l_poly)]+2*minimum_enclosure[(l_poly, l_poly_contact)]
