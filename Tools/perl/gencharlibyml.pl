@@ -45,10 +45,14 @@ print OUT <<EOF
         loads: [0.06, 0.18, 0.42, 0.6, 1.2]
 cells:
 EOF
-;	
+;
 
-foreach my $cell(<*.cell>)
+my @cells=@ARGV;
+@cells=<*.cell> if(!scalar(@cells));
+
+foreach my $cell(@cells)
 {
+  print "Handling $cell\n";
   open IN,"<$cell";
   my $cn=$cell; $cn=~s/\.cell$//;
   print OUT "    $cn:\n";
@@ -85,7 +89,7 @@ foreach my $cell(<*.cell>)
     print OUT "        functions:\n";
     while(<IN>)
     {
-      s/function: //; s/\&\&/\&/g; s/\|\|/\|/g; s/ //g;
+      s/function: //; s/\&\&/\&/g; s/\|\|/\|/g; s/ //g; s/\!(\w+)/\(!$1\)/g;
       print OUT "            - $_";
     }
     close IN;
