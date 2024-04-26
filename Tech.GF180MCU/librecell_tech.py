@@ -1,3 +1,4 @@
+import os
 from lclayout.layout.layers import *
 from lclayout.writer.magic_writer import MagWriter
 from lclayout.writer.lef_writer import LefWriter
@@ -15,12 +16,14 @@ grid = 5 # grid basis
 um = 1000
 nm = 1
 
-targetvoltage="3.3V" # "3.3V" "5V" "6V" "10V"  # unfortunately 1.8V does not seem to be available on GF180
+targetvoltage=os.environ.get("TARGETVOLTAGE","3.3V") # "3.3V" "5V" "6V" "10V"  # unfortunately 1.8V does not seem to be available on GF180
 # "5V" => Operating Voltage VDD = 1.62 - 5.5V according to https://gf180mcu-pdk.readthedocs.io/en/latest/digital/standard_cells/gf180mcu_fd_sc_mcu7t5v0/spec/electrical.html
 
-tracks=9
+tracks=int(os.environ.get("TRACKS","9"))
 
-use_deep_nwell = True
+use_deep_nwell =os.environ.get("DNWELL","True")
+
+print("GF180 standard cell configuration: TARGETVOLTAGE="+targetvoltage+" TRACKS="+str(tracks)+" DNWELL="+use_deep_nwell)
 
 # Scale transistor width.
 transistor_channel_width_sizing = 1
@@ -28,6 +31,8 @@ transistor_channel_width_sizing = 1
 # GDS2 layer numbers for final output.
 # Keep those definitions always in mind: https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_07.html
 # GDS2 layers are taken from: https://gf180mcu-pdk.readthedocs.io/en/latest/physical_verification/design_manual/drm_04_1.html
+# Topological Truthtable for the layers needed in the Standard Cells:
+# https://docs.google.com/spreadsheets/d/1WnX2PdoPuBb3nwg5L60u95co2R2abTH1DZLeoyPBLPY/edit#gid=523905120
 
 my_ndiffusion = (22, 0) # warning: ndiffusion+pdiffusion is on the same GDS2 layer, called COMP
 my_ndiffusion_label = (22, 0)
