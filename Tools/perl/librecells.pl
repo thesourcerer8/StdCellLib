@@ -250,7 +250,7 @@ EOF
     # system_v("python3 ../Tools/python/gen_CharLib.py"); # Old CharLib and Libretto support
     system_v("perl ../Tools/perl/gencharlibyml.pl $cellname.cell");
     $cmd="charlib run $cellname.yml >>$cellname.log 2>>$cellname.err"; # Which Path should we use for CharLib?
-    system_v($md);
+    system_v($cmd);
 
     step("NEXT STEP: Visualisation");
     print "Visualisation:\nlibertyviz -l $cellname.lib --cell $cellname --pin Y --related-pin A --table cell_rise\n";
