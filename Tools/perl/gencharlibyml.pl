@@ -62,7 +62,7 @@ foreach my $cell(@cells)
   print "Handling $cell\n";
   open IN,"<$cell";
   print OUT "    $cn:\n";
-  print OUT "        netlist: $cn.sp\n";
+  print OUT "        netlist: $cn.spice\n";
   while(<IN>)
   {
     if(/^\.inputs (.*?)\s*$/)
