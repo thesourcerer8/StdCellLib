@@ -249,7 +249,7 @@ EOF
     step("NEXT STEP: Characterization with CharLib:");
     # system_v("python3 ../Tools/python/gen_CharLib.py"); # Old CharLib and Libretto support
     system_v("perl ../Tools/perl/gencharlibyml.pl $cellname.cell");
-    $cmd="charlib run $cellname.yml"; # Which Path should we use for CharLib?
+    $cmd="charlib run $cellname.yml >>$cellname.log 2>>$cellname.err"; # Which Path should we use for CharLib?
     system_v($md);
 
     step("NEXT STEP: Visualisation");
