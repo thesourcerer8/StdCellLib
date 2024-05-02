@@ -1211,7 +1211,7 @@ style  import
  scalefactor 50 nanometers
  gridlimit 5
 
- options ignore-unknown-layer-labels options no-reconnect-labels 
+ #options ignore-unknown-layer-labels options no-reconnect-labels 
 
  ignore BJTDEF
  ignore MOSCAP
