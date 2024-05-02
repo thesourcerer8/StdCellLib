@@ -3,10 +3,9 @@
 # This tool is automatically used by the StdCellLib flow, it is called by librecells.pl
 # If you want to run it manually, run it from the CATALOG directory and make sure that the PDK environment variable is set.
 
-open OUT,">libresilicon-charlib.yml";
-
-
-print OUT <<EOF
+sub header()
+{
+  print OUT <<EOF
 settings:
     lib_name: libresilicon-$ENV{'PDK'}
     units:
@@ -35,31 +34,46 @@ settings:
 EOF
 ;
 # This is PDK dependent!
-print OUT <<EOF
+  print OUT <<EOF
             - ../Tech.GF180MCU/sm141064.ngspice typical # This syntax tells CharLib to use the '.lib file section' syntax for this model
             - ../Tech.GF180MCU/design.ngspice
 EOF
 ;
-print OUT <<EOF
+  print OUT <<EOF
         slews: [0.015, 0.04, 0.08, 0.2, 0.4]
         loads: [0.06, 0.18, 0.42, 0.6, 1.2]
 cells:
 EOF
 ;
+}
 
 my @cells=@ARGV;
 @cells=<*.cell> if(!scalar(@cells));
 
+if(scalar(@cells)>1) # If we have more than one cell we create one yml file for the whole library
+{
+  my $fn="libresilicon-charlib.yml";
+  open OUT,">$fn";
+  print "Writing to $fn\n";
+  header();
+}
+
+
 foreach my $cell(@cells)
 {
   my $cn=$cell; $cn=~s/\.cell$//;
-
   if(! -f "$cn.truthtable.v")
   {
     print "Skipping $cell due to missing truthtable\n";
     next;
   }
   print "Handling $cell\n";
+  if(scalar(@cells)==1) # If we have only a single cell we create a yml file for that single cell
+  {
+    open OUT,">$cn.yml";
+    print "Writing to $cn.yml\n";
+    header();
+  }
   open IN,"<$cell";
   print OUT "    $cn:\n";
   print OUT "        netlist: $cn.spice\n";
@@ -100,5 +114,14 @@ foreach my $cell(@cells)
     }
     close IN;
   }
+  if(scalar(@cells)==1)
+  {
+    close OUT;
+  }
 
+}
+
+if(scalar(@cells)>1)
+{
+  close OUT;
 }
