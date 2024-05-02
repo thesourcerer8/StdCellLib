@@ -333,7 +333,7 @@ EOF
 	my @a=();
 	foreach(@ins)
 	{
-          push @a,$res{$_}?"$_":"!$_"; # Here we are collecting all values for a AO representation, e.g. (A && !B && C) || (!A && B && C))
+          push @a,$res{$_}?"$_":"(!$_)"; # Here we are collecting all values for a AO representation, e.g. (A && !B && C) || (!A && B && C))
 	}
 	push @{$results{$out}{$res{$out}}},join($format eq "liberty"?"&":" && ",@a); # Here the single values are put together: (A && !B && C)
       }
