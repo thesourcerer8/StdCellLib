@@ -52,9 +52,15 @@ my @cells=@ARGV;
 
 foreach my $cell(@cells)
 {
+  my $cn=$cell; $cn=~s/\.cell$//;
+
+  if(! -f "$cn.truthtable.v")
+  {
+    print "Skipping $cell due to missing truthtable\n";
+    next;
+  }
   print "Handling $cell\n";
   open IN,"<$cell";
-  my $cn=$cell; $cn=~s/\.cell$//;
   print OUT "    $cn:\n";
   print OUT "        netlist: $cn.sp\n";
   while(<IN>)
