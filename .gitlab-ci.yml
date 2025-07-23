@@ -10,7 +10,7 @@ ls1u_lib:
   stage: build
   script:
     - rm -f Tech && ln -s Tech.LS1UM Tech
-    - cd Catalog && make layout
+    - . /root/env/bin/activate && cd Catalog && make layout
     - cp -r Catalog/outputlib ls1u_lib
   artifacts:
     paths:
@@ -20,7 +20,7 @@ gf180_lib:
   stage: build
   script:
     - rm -f Tech && ln -s Tech.GF180MCU Tech
-    - cd Catalog && make layout
+    - . /root/env/bin/activate && cd Catalog && make layout
     - cp -r Catalog/outputlib gf180_lib
   artifacts:
     paths:
@@ -30,7 +30,7 @@ sky130_lib:
   stage: build
   script:
     - rm -f Tech && ln -s Tech.SKY130 Tech
-    - cd Catalog && make layout
+    - . /root/env/bin/activate && cd Catalog && make layout
     - cp -r Catalog/outputlib sky130_lib
   artifacts:
     paths:
