@@ -13,6 +13,8 @@ This is a 1 micron process, which means one lamba is 500nm.
 The dbunit dictated by KLayout is 0.001 micron which equals 1 nm.
 '''
 
+db_unit = 1e-3
+
 # Lambda - how many db_units is 1 lambda?
 l = 500
 um = 1000
