@@ -6,23 +6,6 @@ default:
 stages:
   - build
 
-ls1u_lib:
-  stage: build
-  script:
-    - |
-      rm -f Tech 
-      ln -s Tech.LS1UM Tech
-      . /root/env/bin/activate
-      cd Catalog
-      make layout
-      cd ..
-      ls
-      cp -r Catalog/outputlib ls1u_lib
-
-  artifacts:
-    paths:
-      - ls1u_lib
-
 gf180_lib:
   stage: build
   script:
@@ -33,7 +16,10 @@ gf180_lib:
       cd Catalog
       make layout
       cd ..
-      ls
+      mkdir -p Catalog/outputlib/errors
+      cp Catalog/*.err Catalog/outputlib/errors/
+      mkdir -p Catalog/outputlib/logs
+      cp Catalog/*.log Catalog/outputlib/logs/
       cp -r Catalog/outputlib gf180_lib
   artifacts:
     paths:
@@ -49,7 +35,10 @@ sky130_lib:
       cd Catalog
       make layout
       cd ..
-      ls
+      mkdir -p Catalog/outputlib/errors
+      cp Catalog/*.err Catalog/outputlib/errors/
+      mkdir -p Catalog/outputlib/logs
+      cp Catalog/*.log Catalog/outputlib/logs/
       cp -r Catalog/outputlib sky130_lib
 
   artifacts:
