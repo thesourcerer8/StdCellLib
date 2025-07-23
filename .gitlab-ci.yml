@@ -1,7 +1,7 @@
 default:
   image:
     name: leviathanch/libresilicon-tools:latest 
-    entrypoint: ["/bin/bash", "-l", "-c"]
+    entrypoint: ["/bin/bash", "-c"]
 
 stages:
   - build
