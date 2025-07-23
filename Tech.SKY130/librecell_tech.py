@@ -196,7 +196,7 @@ min_spacing = {
 pin_layer = l_metal2 # lclayout.metal2 = sky130.metal1
 
 # Power stripe layer
-power_layer = l_metal1 # , l_metal2] # lclayout.metal2 = sky130.metal1
+power_layer = [l_metal1] # , l_metal2] # lclayout.metal2 = sky130.metal1
 
 # Layers that can be connected/merged without changing the schematic.
 # This can be used to resolve spacing/notch violations by just filling the space.
