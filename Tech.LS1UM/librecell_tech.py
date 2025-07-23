@@ -3,10 +3,15 @@ from lclayout.writer.magic_writer import MagWriter
 from lclayout.writer.lef_writer import LefWriter
 from lclayout.writer.gds_writer import GdsWriter
 
-# Physical size of one data base unit in meters.
-# Libresilicon: We wanted to choose 100nm, so 1 lambda is 5 units of 1e-7, so every lambda value has to be multiplied by 5
-# BUT GDS2 requires the database units to be in nanometers, and lclayout cannot convert to nanometers automatically yet
-db_unit = 1e-9
+name = "LS1U"
+
+l_pad = 'pad'
+l_via2 = 'via2'
+
+'''
+This is a 1 micron process, which means one lamba is 500nm.
+The dbunit dictated by KLayout is 0.001 micron which equals 1 nm.
+'''
 
 # Lambda - how many db_units is 1 lambda?
 l = 500
@@ -19,11 +24,14 @@ transistor_channel_width_sizing = 1
 my_ndiffusion = (1, 0)
 my_pdiffusion = (1, 7)
 my_nwell = (2, 0)
-#my_nwell2 = (2, 1) # a copy of the nwell layer due to limitations of other tools we don't need
 my_pwell = (2, 7)
 my_poly = (3, 0) # poly silicium for gates -> poly + ntransistor + ptransistor
 my_poly_contact = (4, 0) # Both poly_contact and diff_contact are the same in Libresilicon and they are both just one layer called "CONTACT"
-my_diff_contact = (5, 0) # Both poly_contact and diff_contact are the same in Libresilicon and they are both just one layer called "CONTACT"
+
+# Both poly_contact and diff_contact are the same in Libresilicon and they are both just one layer called "CONTACT"
+my_pdiff_contact = (5, 0)
+my_ndiff_contact = (5, 7)
+
 my_metal1 = (6, 0)
 my_metal1_label = (6, 1)
 my_metal1_pin = (6, 2)
@@ -31,7 +39,12 @@ my_via1 = (7, 0)
 my_metal2 = (8, 0)
 my_metal2_label = (8, 1)
 my_metal2_pin = (8, 2)
+my_via2 = (9, 0)
+my_pad = (10, 0)
+
 my_abutment_box = (200, 0)
+
+my_outline = (235, 5)
 
 # lclayout internally uses its own layer numbering scheme.
 # For the final output the layers can be remapped with a mapping
@@ -43,16 +56,29 @@ output_map = {
     l_pwell: my_pwell,  # Output layer for pwell. Uncomment this if needed. For instance for twin-well processes.
     l_poly: my_poly,
     l_poly_contact: my_poly_contact,
-    l_diff_contact: my_diff_contact,
+    l_ndiff_contact: my_ndiff_contact,
+    l_pdiff_contact: my_pdiff_contact,
     l_metal1: my_metal1,
     l_metal1_label: my_metal1_label,
     l_metal1_pin: my_metal1_pin,
     l_via1: my_via1,
+    l_via2: my_via2,
     l_metal2: my_metal2,
     l_metal2_label: my_metal2_label,
     l_metal2_pin: my_metal2_pin,
-    l_abutment_box: my_abutment_box
+    l_abutment_box: my_abutment_box,
+    l_pad: my_pad
 }
+
+# These are only the obstruction layers, only these layers will be generated into the OBS section of the LEF files
+obstruction_layers = [
+    l_poly_contact,
+    l_pdiff_contact,
+    l_ndiff_contact,
+    l_metal1,
+    l_via1,
+    l_metal2,
+]
 
 # Define a list of output writers.
 output_writers = [
@@ -71,17 +97,19 @@ output_writers = [
             l_pdiffusion: 'pdiffusion',
             l_metal2_pin: 'metal2',
             l_poly_contact: 'polycontact',
-            l_diff_contact: 'pdcontact'
+            l_pdiff_contact: 'pdcontact',
+            l_ndiff_contact: 'ndcontact'
         }
     ),
 
     LefWriter(
-        db_unit=db_unit,
-        output_map=output_map
+        db_unit=1e-3,
+        output_map=output_map,
+        obstruction_layers=obstruction_layers
     ),
 
     GdsWriter(
-        db_unit=db_unit,
+        db_unit=1e-3,
         output_map=output_map
     )
 ]
@@ -111,15 +139,21 @@ min_spacing = {
     (l_poly, l_ndiffusion): 1*l, # 2.4.6 -> 1l
     (l_poly, l_pdiffusion): 1*l, # 2.4.6 -> 1l
     (l_poly, l_poly): 1*l, # 3 POLY -> 2l  XXX: TODO: THIS NEEDS TO BE INCREASED TO 2l BUT AT THE MOMENT IT WOULD BREAK THE ROUTING
-    (l_poly, l_diff_contact): 2*l, # The maximum "minimum spacing" from poly to anything else is 2l
-    (l_diff_contact, l_diff_contact): 2*l, # 3 -> 2l
+    (l_poly, l_ndiff_contact): 2*l, # The maximum "minimum spacing" from poly to anything else is 2l
+    (l_poly, l_pdiff_contact): 2*l, # The maximum "minimum spacing" from poly to anything else is 2l
+    (l_ndiff_contact, l_ndiff_contact): 2*l, # 3 -> 2l
+    (l_pdiff_contact, l_pdiff_contact): 2*l, # 3 -> 2l
     (l_metal1, l_metal1): 4*l, # 3 METAL1 -> 4l # !!!! WARNING: Spacing to BigMetal (>=10um) needs to be 6l !
     (l_metal2, l_metal2): 4*l, # 3 METAL2 -> 4l
     (l_via1, l_via1): 3*l, # 3 VIA1 -> 3l
-    (l_via1, l_diff_contact): 2*l, # 2.8.3 -> 2l
+    (l_via1, l_ndiff_contact): 2*l, # 2.8.3 -> 2l
+    (l_via1, l_pdiff_contact): 2*l, # 2.8.3 -> 2l
     (l_via1, l_ndiffusion): 2*l, # 2.8.4 -> 2l
     (l_via1, l_pdiffusion): 2*l, # 2.8.4 -> 2l
-    (l_poly_contact, l_diff_contact): 4*l,
+    (l_poly_contact, l_ndiff_contact): 4*l,
+    (l_poly_contact, l_pdiff_contact): 4*l,
+    (l_poly_contact, l_poly_contact): 4*l,
+    (l_via2, l_via2): 3*l, # 3 VIA2 -> 3l
 }
 
 # Layer for the pins.
@@ -192,9 +226,10 @@ wire_width_horizontal = {
 # Side lengths of vias (square shaped).
 via_size = {
     l_poly_contact: 2*l, # 2.6.1 -> 2l
-    l_diff_contact: 2*l, # 2.6.1 -> 2l
-    l_via1: 2*l # 2.8.1 -> 2l
-#    l_via2: 10 # 2.10.1 -> 2l   librecell only goes to metal2, via2 would go to metal3
+    l_ndiff_contact: 2*l, # 2.6.1 -> 2l
+    l_pdiff_contact: 2*l, # 2.6.1 -> 2l
+    l_via1: 2*l, # 2.8.1 -> 2l
+    l_via2: 2*l # 2.10.1 -> 2l   librecell only goes to metal2, via2 would go to metal3
 }
 
 # Minimum width rules.
@@ -204,16 +239,20 @@ minimum_width = {
     l_poly: gate_length, # 2.4.1-> 2l
     l_metal1: 4*l, # 2.7.1 -> 4l
     l_metal2: 4*l, # 2.9.1 -> 4l
+    l_nwell: 10*l, # 4.1 -> 10l
+    l_pwell: 10*l, # 4.2 -> 10l
+
 }
 
 # Minimum enclosure rules.
 # Syntax: {(outer layer, inner layer): minimum enclosure, ...}
 minimum_enclosure = {
     # Via enclosure
-    (l_ndiffusion, l_diff_contact): 1*l, # 2.3.3 -> 6l  Source/Drain are DIFF's
-    (l_pdiffusion, l_diff_contact): 1*l, # 2.3.3 -> 6l  Source/Drain are DIFF's
+    (l_ndiffusion, l_ndiff_contact): 1*l, # 2.3.3 -> 6l  Source/Drain are DIFF's
+    (l_pdiffusion, l_pdiff_contact): 1*l, # 2.3.3 -> 6l  Source/Drain are DIFF's
     (l_poly, l_poly_contact): 1*l, # 2.6.2 -> 1l ?!?!? PLEASE VERIFY WHETHER THIS IS CORRECT
-    (l_metal1, l_diff_contact): 1*l, # 2.7.3 -> 1l
+    (l_metal1, l_ndiff_contact): 1*l, # 2.7.3 -> 1l
+    (l_metal1, l_pdiff_contact): 1*l, # 2.7.3 -> 1l
     (l_metal1, l_poly_contact): 1*l, # 2.7.3 -> 1l
     (l_metal1, l_via1): 1*l,# 2.7.3 -> 1l
     (l_metal2, l_via1): 1*l,# 2.9.3 -> 1l
@@ -248,20 +287,35 @@ min_area = {
 # This will avoid creating zig-zag routings.
 orientation_change_penalty = 100
 
+# Metal 1 and 2 are made from Aluminum and each 300nm thick
+# rho = 0.0265 x 1e-6 x Ohm*m = 0.0265 x 1e-3 x mOhm*m
+# t_met = 300 nm = 300 x 1e-9 m = 3 x 1e-7 m
+# Rm = rho / t_met
+Rm = (0.0265*1e-3)/(3*1e-7)
+
+# Polysilicon is 500nm thick
+# t_poly = 500nm
+Rpoly = 1000*1e3 # mOhm/square -> 1kOhm
+
 # Routing edge weights per data base unit.
+# unit: mohms/square
 weights_horizontal = {
     l_ndiffusion: 10000,
     l_pdiffusion: 10000,
-    l_poly: 10,
-    l_metal1: 1,
-    l_metal2: 2,
+    l_poly: Rpoly,
+    l_metal1: Rm,
+    l_metal2: Rm,
+	l_nwell: 100*1e3,
+	l_pwell: 100*1e3,
 }
 weights_vertical = {
     l_ndiffusion: 10000,
     l_pdiffusion: 10000,
-    l_poly: 10,
-    l_metal1: 1,
-    l_metal2: 2,
+    l_poly: Rpoly,
+    l_metal1: Rm,
+    l_metal2: Rm,
+	l_nwell: 100*1e3,
+	l_pwell: 100*1e3,
 }
 
 # Via weights.
