@@ -162,7 +162,7 @@ min_spacing = {
 pin_layer = l_metal2
 
 # Power stripe layer
-power_layer = l_metal1 # Was recommended by leviathanch due to lesser resistance
+power_layer = [l_metal1] # Was recommended by leviathanch due to lesser resistance
 
 # Layers that can be connected/merged without changing the schematic.
 # This can be used to resolve spacing/notch violations by just filling the space.
