@@ -1,14 +1,15 @@
 default:
-  image: golang:latest
+  image: leviathanch/riscv-toolchain:latest
 
 stages:
   - build
 
-compile:
+gf180_lib:
   stage: build
   script:
-    - mkdir -p mybinaries
-    - touch mybinaries/foo 
+    - rm -f Tech && ln -s Tech.GF180MCU Tech
+    - cd Catalog && make layout
+    - cp -r Catalog/outputlib gf180_lib
   artifacts:
     paths:
-      - mybinaries
+      - gf180_lib
