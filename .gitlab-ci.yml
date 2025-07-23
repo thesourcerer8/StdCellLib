@@ -1,23 +1,14 @@
-name: CI
+default:
+  image: golang:latest
 
-on:
-  # Runs on Every Push
-  push:
-  # Runs on Pull Requests
-  pull_request:
-  workflow_dispatch:
+stages:
+  - build
 
-jobs:
-  pdk:
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Test
-        run: |
-          ls
-
-      #- name: Upload PDK Tarball
-      #  uses: actions/upload-artifact@v2
-      #  with:
-      #    name: pdk-tarball
-      #    path: /tmp/pdk.tar
+compile:
+  stage: build
+  script:
+    - mkdir -p mybinaries
+    - touch mybinaries/foo 
+  artifacts:
+    paths:
+      - mybinaries
