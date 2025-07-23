@@ -23,7 +23,7 @@ library(ls05_stdcells) {
   current_unit : "1uA";
   pulling_resistance_unit : "1kohm";
   leakage_power_unit : "1nW";
-  capacitive_load_unit (1,pf);
+  capacitive_load_unit (1.0,pf);
 
   slew_upper_threshold_pct_rise : 80;
   slew_lower_threshold_pct_rise : 20;
