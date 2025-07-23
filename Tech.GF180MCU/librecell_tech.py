@@ -7,7 +7,7 @@ from lclayout.writer.oasis_writer import OasisWriter
 
 # This Tech file was created for 5V transistors for GlobalFoundries GF180MCU. There might be one layer missing for them. We could create additional cells for 3.3V and 6V, but that would change a lot of the DRC rules
 
-db_unit = 1e-3
+db_unit = 1e-9
 
 # Lambda - how many db_units is 1 lambda?
 grid = 5 # grid basis
