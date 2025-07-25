@@ -105,13 +105,13 @@ output_writers = [
     ),
 
     LefWriter(
-        db_unit=1e-3,
+        db_unit=db_unit,
         output_map=output_map,
         obstruction_layers=obstruction_layers
     ),
 
     GdsWriter(
-        db_unit=1e-3,
+        db_unit=db_unit,
         output_map=output_map
     )
 ]
