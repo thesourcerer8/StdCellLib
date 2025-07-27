@@ -16,11 +16,7 @@ gf180_lib:
       cd Catalog
       make layout
       cd ..
-      mkdir -p Catalog/outputlib/errors
-      cp Catalog/*.err Catalog/outputlib/errors/
-      mkdir -p Catalog/outputlib/logs
-      cp Catalog/*.log Catalog/outputlib/logs/
-      cp -r Catalog/outputlib gf180_lib
+      cp -r Catalog gf180_lib
   artifacts:
     paths:
       - gf180_lib
@@ -35,11 +31,7 @@ sky130_lib:
       cd Catalog
       make layout
       cd ..
-      mkdir -p Catalog/outputlib/errors
-      cp Catalog/*.err Catalog/outputlib/errors/
-      mkdir -p Catalog/outputlib/logs
-      cp Catalog/*.log Catalog/outputlib/logs/
-      cp -r Catalog/outputlib sky130_lib
+      cp -r Catalog sky130_lib
 
   artifacts:
     paths:
