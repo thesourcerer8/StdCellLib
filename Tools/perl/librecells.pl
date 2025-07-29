@@ -106,7 +106,6 @@ while(<IN>)
       undef $/;
       my $magcontent=<MAGIN>;
       $/=$old;
-      $magcontent=~s/tech sky130A/tech sky130A\nmagscale 1 2/s;
       $magcontent=~s/<< abutment >>\nrect /<< properties >>\nstring FIXED_BBOX /s;
       print MAGOUT $magcontent;
       close MAGIN;
