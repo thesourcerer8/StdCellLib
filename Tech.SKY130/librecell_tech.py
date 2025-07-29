@@ -116,6 +116,7 @@ output_writers = [
     MagWriter(
         tech_name='sky130A',
         scale_factor=0.2, # Scale all coordinates by this factor (rounded down to next integer).
+        magscale=[1,2],
         output_map=output_map_magic
     ),
 
