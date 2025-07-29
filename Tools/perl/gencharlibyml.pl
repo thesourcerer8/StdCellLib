@@ -35,8 +35,8 @@ EOF
 ;
 # This is PDK dependent!
   print OUT <<EOF
-            - ../Tech.GF180MCU/sm141064.ngspice typical # This syntax tells CharLib to use the '.lib file section' syntax for this model
-            - ../Tech.GF180MCU/design.ngspice
+            - ../Tech/transistors.ngspice typical # This syntax tells CharLib to use the '.lib file section' syntax for this model
+            - ../Tech/design.ngspice
 EOF
 ;
   print OUT <<EOF
