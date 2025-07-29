@@ -102,8 +102,8 @@
 ************************************************************************************************
 *
 .LIB typical
- .lib 'sm141064.ngspice' nmos_3p3_t
- .lib 'sm141064.ngspice' pmos_3p3_t
+ .lib 'transistors.ngspice' nmos_3p3_t
+ .lib 'transistors.ngspice' pmos_3p3_t
 *
  .param rsh_nplus_u_m=60
  .param rsh_pplus_u_m=185
@@ -128,17 +128,17 @@
  .param pmos_6p0_dcgdo = 1            
  .param pmos_6p0_dcgso = 1            
 
- .lib 'sm141064.ngspice' nmos_6p0_t
- .lib 'sm141064.ngspice' pmos_6p0_t
- .lib 'sm141064.ngspice' nmos_6p0_nat_t
- .lib 'sm141064.ngspice' noise_corner
- .lib 'sm141064.ngspice' fets_mm
+ .lib 'transistors.ngspice' nmos_6p0_t
+ .lib 'transistors.ngspice' pmos_6p0_t
+ .lib 'transistors.ngspice' nmos_6p0_nat_t
+ .lib 'transistors.ngspice' noise_corner
+ .lib 'transistors.ngspice' fets_mm
 .ENDL
 *
 *
 .LIB ff
- .lib 'sm141064.ngspice' nmos_3p3_f
- .lib 'sm141064.ngspice' pmos_3p3_f
+ .lib 'transistors.ngspice' nmos_3p3_f
+ .lib 'transistors.ngspice' pmos_3p3_f
 *
  .param rsh_nplus_u_m=45
  .param rsh_pplus_u_m=145
@@ -163,17 +163,17 @@
  .param pmos_6p0_dcgdo = 0.9          
  .param pmos_6p0_dcgso = 0.9            
 
- .lib 'sm141064.ngspice' nmos_6p0_t
- .lib 'sm141064.ngspice' pmos_6p0_t
- .lib 'sm141064.ngspice' nmos_6p0_nat_t
- .lib 'sm141064.ngspice' noise_corner
- .lib 'sm141064.ngspice' fets_mm
+ .lib 'transistors.ngspice' nmos_6p0_t
+ .lib 'transistors.ngspice' pmos_6p0_t
+ .lib 'transistors.ngspice' nmos_6p0_nat_t
+ .lib 'transistors.ngspice' noise_corner
+ .lib 'transistors.ngspice' fets_mm
 .ENDL
 *
 *
 .LIB ss
- .lib 'sm141064.ngspice' nmos_3p3_s
- .lib 'sm141064.ngspice' pmos_3p3_s
+ .lib 'transistors.ngspice' nmos_3p3_s
+ .lib 'transistors.ngspice' pmos_3p3_s
 *
  .param rsh_nplus_u_m=75
  .param rsh_pplus_u_m=225
@@ -198,17 +198,17 @@
  .param pmos_6p0_dcgdo = 1.1          
  .param pmos_6p0_dcgso = 1.1           
 
- .lib 'sm141064.ngspice' nmos_6p0_t
- .lib 'sm141064.ngspice' pmos_6p0_t
- .lib 'sm141064.ngspice' nmos_6p0_nat_t
- .lib 'sm141064.ngspice' noise_corner
- .lib 'sm141064.ngspice' fets_mm
+ .lib 'transistors.ngspice' nmos_6p0_t
+ .lib 'transistors.ngspice' pmos_6p0_t
+ .lib 'transistors.ngspice' nmos_6p0_nat_t
+ .lib 'transistors.ngspice' noise_corner
+ .lib 'transistors.ngspice' fets_mm
 .ENDL
 *
 *
 .LIB fs
- .lib 'sm141064.ngspice' nmos_3p3_fs
- .lib 'sm141064.ngspice' pmos_3p3_fs
+ .lib 'transistors.ngspice' nmos_3p3_fs
+ .lib 'transistors.ngspice' pmos_3p3_fs
 *
  .param rsh_nplus_u_m=48
  .param rsh_pplus_u_m=219
@@ -233,17 +233,17 @@
  .param pmos_6p0_dcgdo = 1.07         
  .param pmos_6p0_dcgso = 1.07            
 
- .lib 'sm141064.ngspice' nmos_6p0_t
- .lib 'sm141064.ngspice' pmos_6p0_t
- .lib 'sm141064.ngspice' nmos_6p0_nat_t
- .lib 'sm141064.ngspice' noise_corner
- .lib 'sm141064.ngspice' fets_mm
+ .lib 'transistors.ngspice' nmos_6p0_t
+ .lib 'transistors.ngspice' pmos_6p0_t
+ .lib 'transistors.ngspice' nmos_6p0_nat_t
+ .lib 'transistors.ngspice' noise_corner
+ .lib 'transistors.ngspice' fets_mm
 .ENDL
 *
 *
 .LIB sf
- .lib 'sm141064.ngspice' nmos_3p3_sf
- .lib 'sm141064.ngspice' pmos_3p3_sf
+ .lib 'transistors.ngspice' nmos_3p3_sf
+ .lib 'transistors.ngspice' pmos_3p3_sf
 *
  .param rsh_nplus_u_m=72
  .param rsh_pplus_u_m=150
@@ -268,11 +268,11 @@
  .param pmos_6p0_dcgdo = 0.93         
  .param pmos_6p0_dcgso = 0.93           
 
- .lib 'sm141064.ngspice' nmos_6p0_t
- .lib 'sm141064.ngspice' pmos_6p0_t
- .lib 'sm141064.ngspice' nmos_6p0_nat_t
- .lib 'sm141064.ngspice' noise_corner
- .lib 'sm141064.ngspice' fets_mm
+ .lib 'transistors.ngspice' nmos_6p0_t
+ .lib 'transistors.ngspice' pmos_6p0_t
+ .lib 'transistors.ngspice' nmos_6p0_nat_t
+ .lib 'transistors.ngspice' noise_corner
+ .lib 'transistors.ngspice' fets_mm
 .ENDL
 ****************************************************
 *
@@ -303,7 +303,7 @@
 + mc_xrc_vpnp=0
 + mc_xcje_vpnp=0
 + mc_xcjc_vpnp=0
-.lib 'sm141064.ngspice' bjt_mc
+.lib 'transistors.ngspice' bjt_mc
 .ENDL
 *
 .LIB bjt_ss
@@ -333,7 +333,7 @@
 + mc_xrc_vpnp=0
 + mc_xcje_vpnp=0
 + mc_xcjc_vpnp=0
-.lib 'sm141064.ngspice' bjt_mc
+.lib 'transistors.ngspice' bjt_mc
 .ENDL
 *
 .LIB bjt_ff
@@ -363,7 +363,7 @@
 + mc_xrc_vpnp=0
 + mc_xcje_vpnp=0
 + mc_xcjc_vpnp=0
-.lib 'sm141064.ngspice' bjt_mc
+.lib 'transistors.ngspice' bjt_mc
 .ENDL
 ****************************************************
 *
@@ -371,21 +371,21 @@
  .param 
  +jsa=1 rsa=1 cja=1 cjswa=1
  +jsa_sc = 0 vba_sc=0 rs_sc=1 jtuna_sc=0 cja_sc=1
- .lib 'sm141064.ngspice' dio
+ .lib 'transistors.ngspice' dio
 .ENDL
 *
 .LIB diode_ss
  .param 
  +jsa=0.85 rsa=1.1 cja=1.1 cjswa=1.1 
  +jsa_sc = -1.6 vba_sc=-7 rs_sc=1.1 jtuna_sc=-0.77 cja_sc=1.1
- .lib 'sm141064.ngspice' dio
+ .lib 'transistors.ngspice' dio
 .ENDL
 *
 .LIB diode_ff
  .param 
  +jsa=1.15 rsa=0.9 cja=0.9 cjswa=0.9 
  +jsa_sc = 1.6 vba_sc=7 rs_sc=0.9 jtuna_sc=0.77 cja_sc=0.9
- .lib 'sm141064.ngspice' dio
+ .lib 'transistors.ngspice' dio
 .ENDL
 ****************************************************
 *
@@ -414,9 +414,9 @@
 +rsh_tm11k=40e-3
 +rsh_tm30k=9.5e-3
 *
-.lib 'sm141064.ngspice' res
-.lib 'sm141064.ngspice' efuse
-.lib 'sm141064.ngspice' res_statistical_par
+.lib 'transistors.ngspice' res
+.lib 'transistors.ngspice' efuse
+.lib 'transistors.ngspice' res_statistical_par
 .ENDL
 *
 .LIB res_ss
@@ -444,9 +444,9 @@
 +rsh_tm11k='40e-3 + 9e-3'
 +rsh_tm30k='9.5e-3 + 4.5e-3'
 *
-.lib 'sm141064.ngspice' res
-.lib 'sm141064.ngspice' efuse
-.lib 'sm141064.ngspice' res_statistical_par
+.lib 'transistors.ngspice' res
+.lib 'transistors.ngspice' efuse
+.lib 'transistors.ngspice' res_statistical_par
 .ENDL
 *
 .LIB res_ff
@@ -474,9 +474,9 @@
 +rsh_tm11k='40e-3 - 9e-3'
 +rsh_tm30k='9.5e-3 - 3.5e-3'
 *
-.lib 'sm141064.ngspice' res
-.lib 'sm141064.ngspice' efuse
-.lib 'sm141064.ngspice' res_statistical_par
+.lib 'transistors.ngspice' res
+.lib 'transistors.ngspice' efuse
+.lib 'transistors.ngspice' res_statistical_par
 .ENDL
 ****************************************************
 *
@@ -489,7 +489,7 @@
 .param mc_c_cox_1p5fF=0
 .param mc_c_cox_2p0fF=0
 
-.lib 'sm141064.ngspice' mim_cap
+.lib 'transistors.ngspice' mim_cap
 .ENDL
 *
 .LIB mimcap_ss
@@ -500,7 +500,7 @@
 .param mc_c_cox_1p5fF=0
 .param mc_c_cox_2p0fF=0
 
-.lib 'sm141064.ngspice' mim_cap
+.lib 'transistors.ngspice' mim_cap
 .ENDL
 *
 .LIB mimcap_ff
@@ -512,7 +512,7 @@
 .param mc_c_cox_1p5fF=0
 .param mc_c_cox_2p0fF=0
 
-.lib 'sm141064.ngspice' mim_cap
+.lib 'transistors.ngspice' mim_cap
 .ENDL
 ****************************************************
 *
@@ -527,7 +527,7 @@
  + nmoscap_6p0_b_corner=1
  + pmoscap_6p0_b_corner=1
   
-.lib 'sm141064.ngspice' moscap
+.lib 'transistors.ngspice' moscap
 .ENDL
 *
 .lib moscap_ff
@@ -541,7 +541,7 @@
  + nmoscap_6p0_b_corner=0.9
  + pmoscap_6p0_b_corner=0.9
 
-.lib 'sm141064.ngspice' moscap
+.lib 'transistors.ngspice' moscap
 .ENDL
 *
 .lib moscap_ss
@@ -555,7 +555,7 @@
  + nmoscap_6p0_b_corner=1.1
  + pmoscap_6p0_b_corner=1.1
 
-.lib 'sm141064.ngspice' moscap
+.lib 'transistors.ngspice' moscap
 .ENDL
 ****************************************************
 *
@@ -695,13 +695,13 @@
 + rsh_nplus_u_m = 'rsh_nplus2_u*(1+(mc_rsh_nplus_u/(rsh_nplus2_u))*res_mc_skew*sw_stat_global)'
 + rsh_pplus_u_m = 'rsh_pplus2_u*(1+(mc_rsh_pplus_u/(rsh_pplus2_u))*res_mc_skew*sw_stat_global)'
 
- .lib 'sm141064.ngspice' fets_mm
- .lib 'sm141064.ngspice' nmos_3p3_stat 
- .lib 'sm141064.ngspice' pmos_3p3_stat
- .lib 'sm141064.ngspice' nmos_6p0_t 
- .lib 'sm141064.ngspice' pmos_6p0_stat
- .lib 'sm141064.ngspice' nmos_6p0_nat_stat 
- .lib 'sm141064.ngspice' noise_corner
+ .lib 'transistors.ngspice' fets_mm
+ .lib 'transistors.ngspice' nmos_3p3_stat 
+ .lib 'transistors.ngspice' pmos_3p3_stat
+ .lib 'transistors.ngspice' nmos_6p0_t 
+ .lib 'transistors.ngspice' pmos_6p0_stat
+ .lib 'transistors.ngspice' nmos_6p0_nat_stat 
+ .lib 'transistors.ngspice' noise_corner
 
 .ENDL
 *
@@ -47229,8 +47229,8 @@ m0 d g s b pmos_6p0 w=w l=l as=as ad=ad ps=ps pd=pd nrd=nrd nrs=nrs
 + mc_rt_ppolyf_u_3k=mc_rt_ppolyf_u_3k_temp
 
 *
-.lib 'sm141064.ngspice' res
-.lib 'sm141064.ngspice' efuse
+.lib 'transistors.ngspice' res
+.lib 'transistors.ngspice' efuse
 .endl res_statistical
 
 *------------------------------------------------------------------------
@@ -47277,7 +47277,7 @@ m0 d g s b pmos_6p0 w=w l=l as=as ad=ad ps=ps pd=pd nrd=nrd nrs=nrs
 + mc_xrc_vpnp=mc_xrc_vpnp_temp
 + mc_xcje_vpnp=mc_xcje_vpnp_temp
 + mc_xcjc_vpnp=mc_xcjc_vpnp_temp
-.lib 'sm141064.ngspice' bjt_mc
+.lib 'transistors.ngspice' bjt_mc
 .endl bjt_statistical
 
 .lib bjt_mc
@@ -47628,7 +47628,7 @@ q0 c b e s  vnpn_0p54x2  dtemp=dtemp
 + mc_c_cox_1p5fF='mc_c_cox_1p5fF2*sw_stat_global*cap_mc_skew'
 + mc_c_cox_2p0fF='mc_c_cox_2p0fF2*sw_stat_global*cap_mc_skew'
 
-.lib 'sm141064.ngspice' mim_cap
+.lib 'transistors.ngspice' mim_cap
 .endl mimcap_statistical
 
 
