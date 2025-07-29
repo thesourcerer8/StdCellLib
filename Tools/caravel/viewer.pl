@@ -2,7 +2,7 @@
 
 my $STDCELLLIB=$ENV{'STDCELLLIB'} || "/home/philipp/libresilicon/StdCellLib";
 my $CARAVEL=$ENV{'CARAVEL'} || "/media/philipp/Daten/skywater/caravel-stdcelllib-stdcells";
-my $magictech=$ARGV[0] || "sky130A";
+my $magictech=$ARGV[0] || "../Tech/libresilicon.tech";
 
 
 open OUT,"|magic -noconsole -T $magictech";

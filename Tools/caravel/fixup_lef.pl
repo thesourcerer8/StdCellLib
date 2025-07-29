@@ -3,7 +3,7 @@ use strict;
 
 print STDERR "Fixing up .LEF files\n";
 
-my $magictech=$ARGV[0] || "sky130A";
+my $magictech=$ARGV[0] || "../Tech/libresilicon.tech";
 
 my %layersToDo=("li1"=>1,"mcon"=>1,"locali"=>1,"metal1"=>1);
 
