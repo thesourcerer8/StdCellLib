@@ -74,7 +74,7 @@ gf180_lib_10v:
     paths:
       - gf180_lib_10v
 
-sky130_lib:
+sky130_lib_1v8:
   stage: build
   script:
     - |
@@ -86,9 +86,9 @@ sky130_lib:
       export TARGETVOLTAGE="1.8V"
       make layout
       cd ..
-      cp -r Catalog sky130_lib
+      cp -r Catalog sky130_lib_1v8
 
   artifacts:
     paths:
-      - sky130_lib
+      - sky130_lib_1v8
 
