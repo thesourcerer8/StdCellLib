@@ -204,8 +204,9 @@ power_layer = [l_metal1] # , l_metal2] # lclayout.metal2 = sky130.metal1
 connectable_layers = {l_nwell, l_pwell, l_poly}
 # Width of the gate polysilicon stripe.
 # is reused as the minimum_width for the l_poly layer
-gate_length_pmos = 150*nm # (poly.1a)
-gate_length_nmos = 150*nm # (poly.1a)
+gate_length = 150*nm # (poly.1a)
+gate_length_pmos = gate_length
+gate_length_nmos = gate_length
 
 # Minimum length a polysilicon gate must overlap the silicon.
 gate_extension = 130*nm # (poly.8)
