@@ -4,6 +4,13 @@ use strict;
 #Liberty File generator
 #
 
+my $target_voltage=3.3;
+
+my $TARGETVOLTAGE=$ENV{'TARGETVOLTAGE'};
+if ($TARGETVOLTAGE =~ /^(\d+(\.\d+)?)V$/) {
+  $target_voltage=$1;
+}
+
 print <<EOF
 /*
  delay model :       typ
@@ -34,11 +41,11 @@ library(ls05_stdcells) {
   output_threshold_pct_rise : 50;
   output_threshold_pct_fall : 50;
   nom_process : 1;
-  nom_voltage : 5;
+  nom_voltage : $target_voltage;
   nom_temperature : 25;
   operating_conditions ( typical ) {
      process : 1;
-     voltage : 5;
+     voltage : $target_voltage;
      temperature : 25;
   }
   default_operating_conditions : typical;

@@ -5,6 +5,12 @@
 
 sub header()
 {
+  my $target_voltage=3.3;
+  my $TARGETVOLTAGE=$ENV{'TARGETVOLTAGE'};
+  if ($TARGETVOLTAGE =~ /^(\d+(\.\d+)?)V$/) {
+    $target_voltage=$1;
+  }
+
   print OUT <<EOF
 settings:
     lib_name: libresilicon-$ENV{'PDK'}
@@ -19,7 +25,7 @@ settings:
     named_nodes:
         vdd:
             name:       VDD
-            voltage:    3.3
+            voltage:    $target_voltage
         vss:
             name:       GND
             voltage:    0
@@ -28,7 +34,7 @@ settings:
             voltage:    0
         nwell:
             name:       VNW
-            voltage:    3.3
+            voltage:    $target_voltage
     cell_defaults:
         models:
 EOF
