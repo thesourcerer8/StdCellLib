@@ -14,6 +14,7 @@ gf180_lib_3v3:
       ln -s Tech.GF180MCU Tech
       . /root/env/bin/activate
       cd Catalog
+      export PDK="gf180mcu3v3"
       export TARGETVOLTAGE="3.3V"
       make layout
       cd ..
@@ -30,6 +31,7 @@ gf180_lib_5v:
       ln -s Tech.GF180MCU Tech
       . /root/env/bin/activate
       cd Catalog
+      export PDK="gf180mcu5v"
       export TARGETVOLTAGE="5V"
       make layout
       cd ..
@@ -46,6 +48,7 @@ gf180_lib_6v:
       ln -s Tech.GF180MCU Tech
       . /root/env/bin/activate
       cd Catalog
+      export PDK="gf180mcu6v"
       export TARGETVOLTAGE="6V"
       make layout
       cd ..
@@ -62,6 +65,7 @@ gf180_lib_10v:
       ln -s Tech.GF180MCU Tech
       . /root/env/bin/activate
       cd Catalog
+      export PDK="gf180mcu10v"
       export TARGETVOLTAGE="10V"
       make layout
       cd ..
@@ -78,6 +82,8 @@ sky130_lib:
       ln -s Tech.SKY130 Tech
       . /root/env/bin/activate
       cd Catalog
+      export PDK="sky130a1v8"
+      export TARGETVOLTAGE="1.8V"
       make layout
       cd ..
       cp -r Catalog sky130_lib
