@@ -10,7 +10,7 @@ gf180_lib_3v3:
   stage: build
   script:
     - |
-      rm -f Tech 
+      rm -f Tech
       ln -s Tech.GF180MCU Tech
       . /root/env/bin/activate
       cd Catalog
@@ -26,7 +26,7 @@ gf180_lib_5v:
   stage: build
   script:
     - |
-      rm -f Tech 
+      rm -f Tech
       ln -s Tech.GF180MCU Tech
       . /root/env/bin/activate
       cd Catalog
@@ -42,7 +42,7 @@ gf180_lib_6v:
   stage: build
   script:
     - |
-      rm -f Tech 
+      rm -f Tech
       ln -s Tech.GF180MCU Tech
       . /root/env/bin/activate
       cd Catalog
@@ -58,7 +58,7 @@ gf180_lib_10v:
   stage: build
   script:
     - |
-      rm -f Tech 
+      rm -f Tech
       ln -s Tech.GF180MCU Tech
       . /root/env/bin/activate
       cd Catalog
@@ -74,7 +74,7 @@ sky130_lib:
   stage: build
   script:
     - |
-      rm -f Tech 
+      rm -f Tech
       ln -s Tech.SKY130 Tech
       . /root/env/bin/activate
       cd Catalog
