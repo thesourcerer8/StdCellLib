@@ -6,7 +6,7 @@ default:
 stages:
   - build
 
-gf180_lib:
+gf180_lib_3v3:
   stage: build
   script:
     - |
@@ -14,12 +14,61 @@ gf180_lib:
       ln -s Tech.GF180MCU Tech
       . /root/env/bin/activate
       cd Catalog
+      export TARGETVOLTAGE="3.3V"
       make layout
       cd ..
-      cp -r Catalog gf180_lib
+      cp -r Catalog gf180_lib_3v3
   artifacts:
     paths:
-      - gf180_lib
+      - gf180_lib_3v3
+
+gf180_lib_5v:
+  stage: build
+  script:
+    - |
+      rm -f Tech 
+      ln -s Tech.GF180MCU Tech
+      . /root/env/bin/activate
+      cd Catalog
+      export TARGETVOLTAGE="5V"
+      make layout
+      cd ..
+      cp -r Catalog gf180_lib_5v
+  artifacts:
+    paths:
+      - gf180_lib_5v
+
+gf180_lib_6v:
+  stage: build
+  script:
+    - |
+      rm -f Tech 
+      ln -s Tech.GF180MCU Tech
+      . /root/env/bin/activate
+      cd Catalog
+      export TARGETVOLTAGE="6V"
+      make layout
+      cd ..
+      cp -r Catalog gf180_lib_6v
+  artifacts:
+    paths:
+      - gf180_lib_6v
+
+gf180_lib_10v:
+  stage: build
+  script:
+    - |
+      rm -f Tech 
+      ln -s Tech.GF180MCU Tech
+      . /root/env/bin/activate
+      cd Catalog
+      export TARGETVOLTAGE="10V"
+      make layout
+      cd ..
+      cp -r Catalog gf180_lib_10v
+  artifacts:
+    paths:
+      - gf180_lib_10v
 
 sky130_lib:
   stage: build
