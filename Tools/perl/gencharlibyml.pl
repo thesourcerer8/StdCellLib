@@ -26,11 +26,8 @@ settings:
         vdd:
             name:       VDD
             voltage:    $target_voltage
-        vss1:
+        vss:
             name:       GND
-            voltage:    0
-        vss2:
-            name:       VSS
             voltage:    0
         pwell:
             name:       VPW
