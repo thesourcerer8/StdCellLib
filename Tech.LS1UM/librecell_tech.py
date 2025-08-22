@@ -12,7 +12,6 @@ l_via2 = 'via2'
 This is a 1 micron process, which means one lamba is 500nm.
 The dbunit dictated by KLayout is 0.001 micron which equals 1 nm.
 '''
-
 db_unit = 1e-9
 
 # Lambda - how many db_units is 1 lambda?
@@ -68,7 +67,7 @@ output_map = {
     l_metal2: my_metal2,
     l_metal2_label: my_metal2_label,
     l_metal2_pin: my_metal2_pin,
-    l_abutment_box: my_abutment_box,
+    l_abutment_box: [my_abutment_box],
     l_pad: my_pad
 }
 
@@ -82,26 +81,30 @@ obstruction_layers = [
     l_metal2,
 ]
 
+output_map_magic = {
+            l_nwell: l_nwell,
+            l_pwell: l_pwell,
+            l_via1: l_via1,
+            l_poly: l_poly,
+            l_metal1: l_metal1,
+            l_metal2: l_metal2,
+            l_metal1_label: l_metal1_label,
+            l_metal2_label: l_metal2_label,
+            l_metal1_pin: l_metal1_pin,
+            l_metal2_pin: l_metal2_pin,
+            l_ndiffusion: l_ndiffusion,
+            l_pdiffusion: l_pdiffusion,
+            l_poly_contact: l_poly_contact,
+            l_pdiff_contact: l_pdiff_contact,
+            l_ndiff_contact: l_ndiff_contact,
+}
+
 # Define a list of output writers.
 output_writers = [
     MagWriter(
         tech_name='scmos',
-        scale_factor=0.002, # Scale all coordinates by this factor (rounded down to next integer).
-        output_map={
-            l_via1: 'm2contact',
-            l_poly: 'polysilicon',
-            l_abutment_box: ['fence'],
-            l_metal1: 'metal1',
-            l_metal2: 'metal2',
-            l_metal1_label: 'metal1',
-            l_metal2_label: 'metal2',
-            l_ndiffusion: 'ndiffusion',
-            l_pdiffusion: 'pdiffusion',
-            l_metal2_pin: 'metal2',
-            l_poly_contact: 'polycontact',
-            l_pdiff_contact: 'pdcontact',
-            l_ndiff_contact: 'ndcontact'
-        }
+        #scale_factor=0.002, # Scale all coordinates by this factor (rounded down to next integer).
+        output_map=output_map_magic
     ),
 
     LefWriter(
@@ -168,8 +171,8 @@ power_layer = [l_metal1] # Was recommended by leviathanch due to lesser resistan
 # This can be used to resolve spacing/notch violations by just filling the space.
 connectable_layers = {l_nwell, l_pwell}
 # Width of the gate polysilicon stripe.
-# is reused as the minimum_width for the l_poly layer
-gate_length = 2*l # 2.4.1 -> 2l
+gate_length_pmos = 2*l # 2.4.1 -> 2l
+gate_length_nmos = 2*l # 2.4.1 -> 2l
 
 # Minimum length a polysilicon gate must overlap the silicon.
 gate_extension = 2*l # 2.4.4 -> 2l
@@ -186,12 +189,16 @@ assert unit_cell_height >= 16*um, "minimum 16um due to pwell width + nwell-pwell
 # due to nwell size and spacing requirements routing_grid_pitch_y * 8 # * 8
 
 # Routing pitch
-routing_grid_pitch_x = unit_cell_width // 2 // 1
-routing_grid_pitch_y = 2*l # unit_cell_height // 8 // 2
+#routing_grid_pitch_x = unit_cell_width // 8
+#routing_grid_pitch_y = unit_cell_height // 8
+routing_grid_pitch_x = 4*l
+routing_grid_pitch_y = 16*l
 
 # Translate routing grid such that the bottom left grid point is at (grid_offset_x, grid_offset_y)
 grid_offset_x = routing_grid_pitch_x
-grid_offset_y = (routing_grid_pitch_y // 2 ) -0
+#grid_offset_y = (routing_grid_pitch_y // 2 ) -0
+grid_offset_y = routing_grid_pitch_y
+
 
 # Width of power rail.
 power_rail_width = 6*l
@@ -238,12 +245,11 @@ via_size = {
 minimum_width = {
     l_ndiffusion: 2*l, # 4 l
     l_pdiffusion: 2*l, # 4 l
-    l_poly: gate_length, # 2.4.1-> 2l
+    l_poly: 2*l, # 2.4.1-> 2l
     l_metal1: 4*l, # 2.7.1 -> 4l
     l_metal2: 4*l, # 2.9.1 -> 4l
     l_nwell: 10*l, # 4.1 -> 10l
     l_pwell: 10*l, # 4.2 -> 10l
-
 }
 
 # Minimum enclosure rules.
@@ -288,44 +294,51 @@ min_area = {
 # Cost for changing routing direction (horizontal/vertical).
 # This will avoid creating zig-zag routings.
 orientation_change_penalty = 100
+#orientation_change_penalty = 100000
 
 # Metal 1 and 2 are made from Aluminum and each 300nm thick
 # rho = 0.0265 x 1e-6 x Ohm*m = 0.0265 x 1e-3 x mOhm*m
 # t_met = 300 nm = 300 x 1e-9 m = 3 x 1e-7 m
 # Rm = rho / t_met
 Rm = (0.0265*1e-3)/(3*1e-7)
+#Rm *= 1e-3
+print("Weight based on resistance, Rm:",Rm)
 
 # Polysilicon is 500nm thick
 # t_poly = 500nm
 Rpoly = 1000*1e3 # mOhm/square -> 1kOhm
+#Rpoly *= 1e-3
+
+weights_diffusions = 10000
+#weights_diffusions *= 1e-3
 
 # Routing edge weights per data base unit.
 # unit: mohms/square
 weights_horizontal = {
-    l_ndiffusion: 10000,
-    l_pdiffusion: 10000,
+    l_ndiffusion: weights_diffusions,
+    l_pdiffusion: weights_diffusions,
     l_poly: Rpoly,
     l_metal1: Rm,
     l_metal2: Rm,
-	l_nwell: 100*1e3,
-	l_pwell: 100*1e3,
 }
 weights_vertical = {
-    l_ndiffusion: 10000,
-    l_pdiffusion: 10000,
+    l_ndiffusion: weights_diffusions,
+    l_pdiffusion: weights_diffusions,
     l_poly: Rpoly,
     l_metal1: Rm,
     l_metal2: Rm,
-	l_nwell: 100*1e3,
-	l_pwell: 100*1e3,
 }
 
 # Via weights.
+#via_weight_scale=1e-2
+via_weight_scale=1
 via_weights = {
-    (l_metal1, l_ndiffusion): 500,
-    (l_metal1, l_pdiffusion): 500,
-    (l_metal1, l_poly): 500,
-    (l_metal1, l_metal2): 400
+    (l_metal1, l_ndiffusion): 500*via_weight_scale,
+    (l_metal1, l_pdiffusion): 500*via_weight_scale,
+    (l_metal1, l_poly): 500*via_weight_scale,
+    (l_metal1, l_metal2): 400*via_weight_scale,
+    (l_metal1, l_pplus): 400*via_weight_scale,
+    (l_metal1, l_nplus): 400*via_weight_scale,
 }
 
 # Enable double vias between layers.
@@ -333,3 +346,6 @@ multi_via = {
     (l_metal1, l_poly): 1,
     (l_metal1, l_metal2): 1,
 }
+
+grid_ys = list(range(grid_offset_y, grid_offset_y + unit_cell_height +1, routing_grid_pitch_y))
+print("grid_after: "+str(grid_ys))
