@@ -11,6 +11,12 @@ sub header()
     $target_voltage=$1;
   }
 
+  # TODO: Load this from config files
+  #my $slews="[0.2, 0.4]";
+  #my $loads="[0.6, 1.2]";
+  my $slews="[0.015, 0.04, 0.08, 0.2, 0.4]";
+  my $loads="[0.06, 0.18, 0.42, 0.6, 1.2]";
+
   print OUT <<EOF
 settings:
     lib_name: libresilicon-$ENV{'PDK'}
@@ -46,8 +52,8 @@ EOF
 EOF
 ;
   print OUT <<EOF
-        slews: [0.015, 0.04, 0.08, 0.2, 0.4]
-        loads: [0.06, 0.18, 0.42, 0.6, 1.2]
+        slews: $slews
+        loads: $loads
 cells:
 EOF
 ;
