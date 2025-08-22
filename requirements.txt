@@ -1,0 +1,5 @@
+gdspy
+charlib
+kiwisolver
+sphinxcontrib-verilog-diagrams
+PySpice
