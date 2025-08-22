@@ -21,7 +21,7 @@ def expand_lib(ifpath,line):
         file.close()
     lines = lines.split('\n')
     for line in lines:
-        if line.lower().startswith(".include"):
+        if line.lower().strip().startswith(".include"):
             ret+=expand_lib(_ifpath,line)
         else:
             ret+=line+'\n'
@@ -49,7 +49,7 @@ if __name__ == "__main__":
                 elif has_begun and line.lower().startswith(".endl"):
                      ret+=".ENDL typical\n"
                      break
-                elif line.lower().startswith(".include"):
+                elif line.lower().strip().startswith(".include"):
                      ret+=expand_lib(ifpath,line)
                 else:
                      ret+=line+'\n'
