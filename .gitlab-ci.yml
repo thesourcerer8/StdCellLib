@@ -6,89 +6,26 @@ default:
 stages:
   - build
 
+# Standard Cell Lib Targets:
+
+ls1u_lib_5v:
+  stage: build
+  script: make ls1u_lib_5v
+  artifacts:
+    paths:
+      - ls1u_lib_5v
+
 gf180_lib_3v3:
   stage: build
-  script:
-    - |
-      rm -f Tech
-      ln -s Tech.GF180MCU Tech
-      . /root/env/bin/activate
-      cd Catalog
-      export PDK="gf180mcu3v3"
-      export TARGETVOLTAGE="3.3V"
-      make layout
-      cd ..
-      cp -r Catalog gf180_lib_3v3
+  script: make gf180_lib_3v3
   artifacts:
     paths:
       - gf180_lib_3v3
 
-gf180_lib_5v:
+ihp_sg13g2_lib:
   stage: build
-  script:
-    - |
-      rm -f Tech
-      ln -s Tech.GF180MCU Tech
-      . /root/env/bin/activate
-      cd Catalog
-      export PDK="gf180mcu5v"
-      export TARGETVOLTAGE="5V"
-      make layout
-      cd ..
-      cp -r Catalog gf180_lib_5v
+  script: make ihp_sg13g2_lib
   artifacts:
     paths:
-      - gf180_lib_5v
-
-gf180_lib_6v:
-  stage: build
-  script:
-    - |
-      rm -f Tech
-      ln -s Tech.GF180MCU Tech
-      . /root/env/bin/activate
-      cd Catalog
-      export PDK="gf180mcu6v"
-      export TARGETVOLTAGE="6V"
-      make layout
-      cd ..
-      cp -r Catalog gf180_lib_6v
-  artifacts:
-    paths:
-      - gf180_lib_6v
-
-gf180_lib_10v:
-  stage: build
-  script:
-    - |
-      rm -f Tech
-      ln -s Tech.GF180MCU Tech
-      . /root/env/bin/activate
-      cd Catalog
-      export PDK="gf180mcu10v"
-      export TARGETVOLTAGE="10V"
-      make layout
-      cd ..
-      cp -r Catalog gf180_lib_10v
-  artifacts:
-    paths:
-      - gf180_lib_10v
-
-sky130_lib_1v8:
-  stage: build
-  script:
-    - |
-      rm -f Tech
-      ln -s Tech.SKY130 Tech
-      . /root/env/bin/activate
-      cd Catalog
-      export PDK="sky130a1v8"
-      export TARGETVOLTAGE="1.8V"
-      make layout
-      cd ..
-      cp -r Catalog sky130_lib_1v8
-
-  artifacts:
-    paths:
-      - sky130_lib_1v8
+      - ihp_sg13g2_lib
 
