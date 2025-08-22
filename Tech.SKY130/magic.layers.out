@@ -1,0 +1,558 @@
+
+Magic 8.3 revision 525 - Compiled on Wed Aug  6 04:36:58 UTC 2025.
+Starting magic under Tcl interpreter
+Using the terminal as the console.
+Using NULL graphics device.
+Input style sky130(): scaleFactor=2, multiplier=2
+The following types are not handled by extraction and will be treated as non-electrical types:
+    ubm 
+Processing system .magicrc file
+Using technology "sky130A", version 1.0.532-2-gc6d73a3
+CUT HERE -------- CUT HERE
+EXPANDING: *li
+ndcontact pdcontact mvndcontact mvpdcontact psubstratepcontact nsubstratencontact mvpsubstratepcontact mvnsubstratencontact pcontact xpolycontact pdiodec ndiodec nndiodec mvpdiodec mvndiodec pdiodelvtc pdiodehvtc ndiodelvtc locali viali
+EXPANDING: *li,coreli
+ndcontact pdcontact mvndcontact mvpdcontact psubstratepcontact nsubstratencontact mvpsubstratepcontact mvnsubstratencontact pcontact xpolycontact pdiodec ndiodec nndiodec mvpdiodec mvndiodec pdiodelvtc pdiodehvtc ndiodelvtc locali corelocali viali
+EXPANDING: *li,rli,coreli
+ndcontact pdcontact mvndcontact mvpdcontact psubstratepcontact nsubstratencontact mvpsubstratepcontact mvnsubstratencontact pcontact xpolycontact pdiodec ndiodec nndiodec mvpdiodec mvndiodec pdiodelvtc pdiodehvtc ndiodelvtc locali corelocali rlocali viali
+EXPANDING: *locali
+ndcontact pdcontact mvndcontact mvpdcontact psubstratepcontact nsubstratencontact mvpsubstratepcontact mvnsubstratencontact pcontact xpolycontact pdiodec ndiodec nndiodec mvpdiodec mvndiodec pdiodelvtc pdiodehvtc ndiodelvtc locali viali
+EXPANDING: *locali,rli
+ndcontact pdcontact mvndcontact mvpdcontact psubstratepcontact nsubstratencontact mvpsubstratepcontact mvnsubstratencontact pcontact xpolycontact pdiodec ndiodec nndiodec mvpdiodec mvndiodec pdiodelvtc pdiodehvtc ndiodelvtc locali rlocali viali
+EXPANDING: *locali,rli,*obsli
+ndcontact pdcontact mvndcontact mvpdcontact psubstratepcontact nsubstratencontact mvpsubstratepcontact mvnsubstratencontact pcontact xpolycontact pdiodec ndiodec nndiodec mvpdiodec mvndiodec pdiodelvtc pdiodehvtc ndiodelvtc locali rlocali viali obsli1 obsli1c
+EXPANDING: *m1
+viali obsli1c metal1 m2contact
+EXPANDING: *m1,rm1
+viali obsli1c metal1 rmetal1 m2contact
+EXPANDING: *m2
+m2contact metal2 m3contact
+EXPANDING: *m2,rm2
+m2contact metal2 rmetal2 m3contact
+EXPANDING: *m3
+m3contact metal3 via3
+EXPANDING: *m3,rm3
+m3contact metal3 rmetal3 via3
+EXPANDING: *m4
+via3 mimcapcontact metal4 via4
+EXPANDING: *m4,rm4
+via3 mimcapcontact metal4 rmetal4 via4
+EXPANDING: *m5
+via4 mimcap2contact metal5 mrdlcontact
+EXPANDING: *m5,rm5
+via4 mimcap2contact metal5 rmetal5 mrdlcontact
+EXPANDING: *met1
+viali obsli1c metal1 m2contact
+EXPANDING: *metal3
+m3contact metal3 via3
+EXPANDING: *metal3/m3
+m3contact metal3 via3
+EXPANDING: *metal4
+via3 mimcapcontact metal4 via4
+EXPANDING: *metal4/m4
+via3 mimcapcontact metal4 via4
+EXPANDING: *mim2cc
+mimcap2contact
+EXPANDING: *mimcap
+mimcap mimcapcontact
+EXPANDING: *mimcap2
+mimcap2 mimcap2contact
+EXPANDING: *mimcc
+mimcapcontact
+EXPANDING: *mvndi
+mvndiode mvndiodec
+EXPANDING: *mvndiff
+mvndiffusion mvndcontact
+EXPANDING: *mvndiff,*mvndiode,mvnfet,mvnnfet,nnfet
+nntransistor mvntransistor mvnntransistor mvndiffusion mvndcontact mvndiode mvndiodec
+EXPANDING: *mvndiff,mvnfet,mvnfetesd,mvnnfet,nnfet,*mvndiode,*nndiode,mvndiffres,*mvpdiff,mvpfet,mvpfetesd,*mvpdiode,mvpdiffres
+nntransistor mvntransistor mvptransistor mvnntransistor mvntransistoresd mvptransistoresd mvndiffusion mvpdiffusion mvndcontact mvpdcontact mvndiffres mvpdiffres nndiode nndiodec mvpdiode mvndiode mvpdiodec mvndiodec
+EXPANDING: *mvndiff,mvnfet,mvnfetesd,mvnnfet,nnfet,*mvndiode,*nndiode,mvndiffres,mvvar
+nntransistor mvntransistor mvnntransistor mvntransistoresd mvvaractor mvndiffusion mvndcontact mvndiffres nndiode nndiodec mvndiode mvndiodec
+EXPANDING: *mvndiff,mvnfet,mvnfetesd,mvrnd
+mvntransistor mvntransistoresd mvndiffusion mvndcontact mvndiffres
+EXPANDING: *mvndiode
+mvndiode mvndiodec
+EXPANDING: *mvnsd
+mvnsubstratendiff mvnsubstratencontact
+EXPANDING: *mvnsd,*mvpdiff,mvpfet,mvpfetesd,mvvar,*mvpdiode
+mvptransistor mvptransistoresd mvvaractor mvpdiffusion mvpdcontact mvnsubstratendiff mvnsubstratencontact mvpdiode mvpdiodec
+EXPANDING: *mvnsd,*mvpsd
+mvpsubstratepdiff mvnsubstratendiff mvpsubstratepcontact mvnsubstratencontact
+EXPANDING: *mvpdi
+mvpdiode mvpdiodec
+EXPANDING: *mvpdiff
+mvpdiffusion mvpdcontact
+EXPANDING: *mvpdiff,*mvpdiode,mvpfet,mvpfetesd
+mvptransistor mvptransistoresd mvpdiffusion mvpdcontact mvpdiode mvpdiodec
+EXPANDING: *mvpdiff,mvpfet,mvpfetesd,mvrpd
+mvptransistor mvptransistoresd mvpdiffusion mvpdcontact mvpdiffres
+EXPANDING: *mvpdiode
+mvpdiode mvpdiodec
+EXPANDING: *mvpsd
+mvpsubstratepdiff mvpsubstratepcontact
+EXPANDING: *mvpsd,*psd
+psubstratepdiff mvpsubstratepdiff psubstratepcontact mvpsubstratepcontact
+EXPANDING: *ndi
+ndiode ndiodec
+EXPANDING: *ndiff
+ndiffusion ndcontact
+EXPANDING: *ndiff,*mvndiff,*ndiode,*nndiode,ndiffres,*ndiodelvt,*pdiff,*mvpdiff,*pdiode,pdiffres,*pdiodelvt,*pdiodehvt
+ndiffusion pdiffusion mvndiffusion mvpdiffusion ndcontact pdcontact mvndcontact mvpdcontact ndiffres pdiffres pdiode ndiode nndiode pdiodec ndiodec nndiodec pdiodelvt pdiodehvt ndiodelvt pdiodelvtc pdiodehvtc ndiodelvtc
+EXPANDING: *ndiff,*ndiode,nfet
+ntransistor ndiffusion ndcontact ndiode ndiodec
+EXPANDING: *ndiff,nfet,scnfet,scnfetlvt,npd,npass,*nsd,*ndiode,ndiffres,*pdiff,pfet,scpfet,scpfethvt,ppu,*psd,*pdiode,pdiffres,fomfill
+ntransistor scntransistor sramnfet srampassfet ptransistor scptransistor srampfet scpfethvt scnfetlvt fomfill ndiffusion pdiffusion ndcontact pdcontact psubstratepdiff nsubstratendiff psubstratepcontact nsubstratencontact ndiffres pdiffres pdiode ndiode pdiodec ndiodec
+EXPANDING: *ndiff,nfet,scnfet,scnfetlvt,npd,npass,nfetlvt,rnd
+ntransistor scntransistor sramnfet srampassfet nfetlvt scnfetlvt ndiffusion ndcontact ndiffres
+EXPANDING: *ndiode
+ndiode ndiodec
+EXPANDING: *ndiodelvt
+ndiodelvt ndiodelvtc
+EXPANDING: *nndiode
+nndiode nndiodec
+EXPANDING: *nsd
+nsubstratendiff nsubstratencontact
+EXPANDING: *nsd,pdiff,corenvar
+corenvaractor pdiffusion nsubstratendiff nsubstratencontact
+EXPANDING: *obsli
+obsli1 obsli1c
+EXPANDING: *obsm1
+obsm1
+EXPANDING: *pdi
+pdiode pdiodec
+EXPANDING: *pdiff
+pdiffusion pdcontact
+EXPANDING: *pdiff,*pdiode,pfet,scpfet,ppu
+ptransistor scptransistor srampfet pdiffusion pdcontact pdiode pdiodec
+EXPANDING: *pdiff,pfet,scpfet,scpfethvt,ppu,pfethvt,pfetmvt,pfetlvt,rpd
+ptransistor scptransistor srampfet pfetlvt pfetmvt pfethvt scpfethvt pdiffusion pdcontact pdiffres
+EXPANDING: *pdiode
+pdiode pdiodec
+EXPANDING: *pdiodehvt
+pdiodehvt pdiodehvtc
+EXPANDING: *pdiodelvt
+pdiodelvt pdiodelvtc
+EXPANDING: *poly
+polysilicon pcontact
+EXPANDING: *poly,allfets,mrp1,rmp
+ntransistor scntransistor sramnfet srampassfet ptransistor scptransistor srampfet nntransistor mvntransistor mvptransistor mvnntransistor mvntransistoresd mvptransistoresd varactor mvvaractor pfetlvt pfetmvt pfethvt scpfethvt nfetlvt scnfetlvt varactorhvt nsonos corenvaractor corepvaractor polysilicon pcontact npolyres rmp
+EXPANDING: *poly,mrp1,xhrpoly,uhrpoly
+polysilicon pcontact npolyres ppolyres xpolyres
+EXPANDING: *psd
+psubstratepdiff psubstratepcontact
+EXPANDING: *psd,ndiff,corepvar
+corepvaractor ndiffusion psubstratepdiff psubstratepcontact
+EXPANDING: alldiff
+ntransistor scntransistor sramnfet srampassfet ptransistor scptransistor srampfet nntransistor mvntransistor mvptransistor mvnntransistor mvntransistoresd mvptransistoresd pfetlvt pfetmvt pfethvt scpfethvt nfetlvt scnfetlvt nsonos fomfill ndiffusion pdiffusion mvndiffusion mvpdiffusion ndcontact pdcontact mvndcontact mvpdcontact psubstratepdiff nsubstratendiff mvpsubstratepdiff mvnsubstratendiff psubstratepcontact nsubstratencontact mvpsubstratepcontact mvnsubstratencontact ndiffres pdiffres mvndiffres mvpdiffres pdiode ndiode nndiode pdiodec ndiodec nndiodec mvpdiode mvndiode mvpdiodec mvndiodec
+EXPANDING: alldifflv
+ntransistor scntransistor sramnfet srampassfet ptransistor scptransistor srampfet pfetlvt pfetmvt pfethvt scpfethvt nfetlvt scnfetlvt nsonos ndiffusion pdiffusion ndcontact pdcontact psubstratepdiff nsubstratendiff psubstratepcontact nsubstratencontact ndiffres pdiffres pdiode ndiode pdiodec ndiodec
+EXPANDING: alldifflv,var,varhvt
+ntransistor scntransistor sramnfet srampassfet ptransistor scptransistor srampfet varactor pfetlvt pfetmvt pfethvt scpfethvt nfetlvt scnfetlvt varactorhvt nsonos ndiffusion pdiffusion ndcontact pdcontact psubstratepdiff nsubstratendiff psubstratepcontact nsubstratencontact ndiffres pdiffres pdiode ndiode pdiodec ndiodec
+EXPANDING: alldifflv,var,varhvt,corenvar,corepvar,fomfill
+ntransistor scntransistor sramnfet srampassfet ptransistor scptransistor srampfet varactor pfetlvt pfetmvt pfethvt scpfethvt nfetlvt scnfetlvt varactorhvt nsonos corenvaractor corepvaractor fomfill ndiffusion pdiffusion ndcontact pdcontact psubstratepdiff nsubstratendiff psubstratepcontact nsubstratencontact ndiffres pdiffres pdiode ndiode pdiodec ndiodec
+EXPANDING: alldiffmv
+nntransistor mvntransistor mvptransistor mvnntransistor mvntransistoresd mvptransistoresd mvndiffusion mvpdiffusion mvndcontact mvpdcontact mvpsubstratepdiff mvnsubstratendiff mvpsubstratepcontact mvnsubstratencontact mvndiffres mvpdiffres nndiode nndiodec mvpdiode mvndiode mvpdiodec mvndiodec
+EXPANDING: alldiffmv,mvvar
+nntransistor mvntransistor mvptransistor mvnntransistor mvntransistoresd mvptransistoresd mvvaractor mvndiffusion mvpdiffusion mvndcontact mvpdcontact mvpsubstratepdiff mvnsubstratendiff mvpsubstratepcontact mvnsubstratencontact mvndiffres mvpdiffres nndiode nndiodec mvpdiode mvndiode mvpdiodec mvndiodec
+EXPANDING: alldiffmvnontap
+nntransistor mvntransistor mvptransistor mvnntransistor mvntransistoresd mvptransistoresd mvndiffusion mvpdiffusion mvndcontact mvpdcontact mvndiffres mvpdiffres nndiode nndiodec mvpdiode mvndiode mvpdiodec mvndiodec
+EXPANDING: alldiffmvnontap,mvvar
+nntransistor mvntransistor mvptransistor mvnntransistor mvntransistoresd mvptransistoresd mvvaractor mvndiffusion mvpdiffusion mvndcontact mvpdcontact mvndiffres mvpdiffres nndiode nndiodec mvpdiode mvndiode mvpdiodec mvndiodec
+EXPANDING: allfets
+ntransistor scntransistor sramnfet srampassfet ptransistor scptransistor srampfet nntransistor mvntransistor mvptransistor mvnntransistor mvntransistoresd mvptransistoresd varactor mvvaractor pfetlvt pfetmvt pfethvt scpfethvt nfetlvt scnfetlvt varactorhvt nsonos corenvaractor corepvaractor
+EXPANDING: allfetsnolvt
+ntransistor scntransistor sramnfet srampassfet ptransistor scptransistor srampfet nntransistor mvntransistor mvptransistor mvnntransistor mvntransistoresd mvptransistoresd varactor mvvaractor pfetmvt pfethvt scpfethvt varactorhvt nsonos corenvaractor
+EXPANDING: allli
+ndcontact pdcontact mvndcontact mvpdcontact psubstratepcontact nsubstratencontact mvpsubstratepcontact mvnsubstratencontact pcontact xpolycontact pdiodec ndiodec nndiodec mvpdiodec mvndiodec pdiodelvtc pdiodehvtc ndiodelvtc locali corelocali rlocali viali
+EXPANDING: allli,*obsli
+ndcontact pdcontact mvndcontact mvpdcontact psubstratepcontact nsubstratencontact mvpsubstratepcontact mvnsubstratencontact pcontact xpolycontact pdiodec ndiodec nndiodec mvpdiodec mvndiodec pdiodelvtc pdiodehvtc ndiodelvtc locali corelocali rlocali viali obsli1 obsli1c
+EXPANDING: allm1
+viali obsli1c metal1 rmetal1 m2contact
+EXPANDING: allm1,*obsm1,m1fill
+viali obsli1c metal1 rmetal1 m2contact obsm1 m1fill
+EXPANDING: allm1,m1fill
+viali obsli1c metal1 rmetal1 m2contact m1fill
+EXPANDING: allm2
+m2contact metal2 rmetal2 m3contact
+EXPANDING: allm2,m2fill
+m2contact metal2 rmetal2 m3contact m2fill
+EXPANDING: allm2,obsm2,m2fill
+m2contact metal2 rmetal2 m3contact obsm2 m2fill
+EXPANDING: allm3
+m3contact metal3 rmetal3 via3
+EXPANDING: allm3,m3fill
+m3contact metal3 rmetal3 via3 m3fill
+EXPANDING: allm3,obsm3,m3fill
+m3contact metal3 rmetal3 obsm3 via3 m3fill
+EXPANDING: allm4
+via3 mimcapcontact metal4 rmetal4 via4
+EXPANDING: allm4,m4fill
+via3 mimcapcontact metal4 rmetal4 via4 m4fill
+EXPANDING: allm4,obsm4,m4fill
+via3 mimcapcontact metal4 rmetal4 obsm4 via4 m4fill
+EXPANDING: allm5
+via4 mimcap2contact metal5 rmetal5 mrdlcontact
+EXPANDING: allm5,m5fill
+via4 mimcap2contact metal5 rmetal5 m5fill mrdlcontact
+EXPANDING: allm5,obsm5,m5fill
+via4 mimcap2contact metal5 rmetal5 obsm5 m5fill mrdlcontact
+EXPANDING: allnactivenonfet
+ndiffusion mvndiffusion ndcontact mvndcontact nsubstratendiff mvnsubstratendiff nsubstratencontact mvnsubstratencontact ndiode nndiode ndiodec nndiodec mvndiode mvndiodec ndiodelvt ndiodelvtc
+EXPANDING: allnactivenontap
+ntransistor scntransistor sramnfet srampassfet nntransistor mvntransistor mvnntransistor mvntransistoresd nfetlvt scnfetlvt nsonos ndiffusion mvndiffusion ndcontact mvndcontact ndiode nndiode ndiodec nndiodec mvndiode mvndiodec ndiodelvt ndiodelvtc
+EXPANDING: allndiffcont
+ndcontact mvndcontact nsubstratencontact mvnsubstratencontact ndiodec nndiodec mvndiodec ndiodelvtc
+EXPANDING: allndifflv
+ntransistor scntransistor sramnfet srampassfet nfetlvt scnfetlvt nsonos ndiffusion ndcontact nsubstratendiff nsubstratencontact ndiffres ndiode ndiodec
+EXPANDING: allndifflv,allndiffmv
+ntransistor scntransistor sramnfet srampassfet nntransistor mvntransistor mvnntransistor mvntransistoresd nfetlvt scnfetlvt nsonos ndiffusion mvndiffusion ndcontact mvndcontact nsubstratendiff mvnsubstratendiff nsubstratencontact mvnsubstratencontact ndiffres mvndiffres ndiode nndiode ndiodec nndiodec mvndiode mvndiodec
+EXPANDING: allndiffmv
+nntransistor mvntransistor mvnntransistor mvntransistoresd mvndiffusion mvndcontact mvnsubstratendiff mvnsubstratencontact mvndiffres nndiode nndiodec mvndiode mvndiodec
+EXPANDING: allndiffmvnontap
+nntransistor mvntransistor mvnntransistor mvntransistoresd mvndiffusion mvndcontact mvndiffres nndiode nndiodec mvndiode mvndiodec
+EXPANDING: allnfets
+ntransistor scntransistor sramnfet srampassfet nntransistor mvntransistor mvnntransistor mvntransistoresd nfetlvt scnfetlvt nsonos
+EXPANDING: allnwell
+nwell obswell nbase
+EXPANDING: allpactivenonfet
+pdiffusion mvpdiffusion pdcontact mvpdcontact psubstratepdiff mvpsubstratepdiff psubstratepcontact mvpsubstratepcontact pdiode pdiodec mvpdiode mvpdiodec pdiodelvt pdiodehvt pdiodelvtc pdiodehvtc
+EXPANDING: allpactivenontap
+ptransistor scptransistor srampfet mvptransistor mvptransistoresd pfetlvt pfetmvt pfethvt scpfethvt pdiffusion mvpdiffusion pdcontact mvpdcontact pdiode pdiodec mvpdiode mvpdiodec pdiodelvt pdiodehvt pdiodelvtc pdiodehvtc
+EXPANDING: allpdiffcont
+pdcontact mvpdcontact psubstratepcontact mvpsubstratepcontact pdiodec mvpdiodec pdiodelvtc pdiodehvtc
+EXPANDING: allpdifflv
+ptransistor scptransistor srampfet pfetlvt pfetmvt pfethvt scpfethvt pdiffusion pdcontact psubstratepdiff psubstratepcontact pdiffres pdiode pdiodec
+EXPANDING: allpdifflv,allpdiffmv
+ptransistor scptransistor srampfet mvptransistor mvptransistoresd pfetlvt pfetmvt pfethvt scpfethvt pdiffusion mvpdiffusion pdcontact mvpdcontact psubstratepdiff mvpsubstratepdiff psubstratepcontact mvpsubstratepcontact pdiffres mvpdiffres pdiode pdiodec mvpdiode mvpdiodec
+EXPANDING: allpdiffmv
+mvptransistor mvptransistoresd mvpdiffusion mvpdcontact mvpsubstratepdiff mvpsubstratepcontact mvpdiffres mvpdiode mvpdiodec
+EXPANDING: allpdiffmvnontap
+mvptransistor mvptransistoresd mvpdiffusion mvpdcontact mvpdiffres mvpdiode mvpdiodec
+EXPANDING: allpfets
+ptransistor scptransistor srampfet mvptransistor mvptransistoresd pfetlvt pfetmvt pfethvt scpfethvt
+EXPANDING: allpoly
+ntransistor scntransistor sramnfet srampassfet ptransistor scptransistor srampfet nntransistor mvntransistor mvptransistor mvnntransistor mvntransistoresd mvptransistoresd varactor mvvaractor pfetlvt pfetmvt pfethvt scpfethvt nfetlvt scnfetlvt varactorhvt nsonos corenvaractor corepvaractor polysilicon pcontact xpolycontact npolyres ppolyres xpolyres rmp
+EXPANDING: allpoly,polyfill
+ntransistor scntransistor sramnfet srampassfet ptransistor scptransistor srampfet nntransistor mvntransistor mvptransistor mvnntransistor mvntransistoresd mvptransistoresd varactor mvvaractor pfetlvt pfetmvt pfethvt scpfethvt nfetlvt scnfetlvt varactorhvt nsonos corenvaractor corepvaractor polysilicon pcontact xpolycontact polyfill npolyres ppolyres xpolyres rmp
+EXPANDING: allpolynonfet
+polysilicon pcontact xpolycontact npolyres ppolyres xpolyres rmp
+EXPANDING: allpolynonfet,polyfill
+polysilicon pcontact xpolycontact polyfill npolyres ppolyres xpolyres rmp
+EXPANDING: coreli
+corelocali
+EXPANDING: coreli,pc,ndc,nsc,pdc,psc,allli,*obsli
+ndcontact pdcontact mvndcontact mvpdcontact psubstratepcontact nsubstratencontact mvpsubstratepcontact mvnsubstratencontact pcontact xpolycontact pdiodec ndiodec nndiodec mvpdiodec mvndiodec pdiodelvtc pdiodehvtc ndiodelvtc locali corelocali rlocali viali obsli1 obsli1c
+EXPANDING: coreli,pc,ndc,nsc,pdc,psc,mcon
+ndcontact pdcontact psubstratepcontact nsubstratencontact pcontact corelocali viali
+EXPANDING: corenvar
+corenvaractor
+EXPANDING: corepvar
+corepvaractor
+EXPANDING: dnwell
+dnwell
+EXPANDING: fomfill
+fomfill
+EXPANDING: glass
+glass
+EXPANDING: m1fill
+m1fill
+EXPANDING: m2fill
+m2fill
+EXPANDING: m3fill
+m3fill
+EXPANDING: m4fill
+m4fill
+EXPANDING: m5fill
+m5fill
+EXPANDING: mcon
+viali
+EXPANDING: mcon/m1
+viali
+EXPANDING: mcon/m1,obsmcon/m1
+viali obsli1c
+EXPANDING: metrdl
+metalrdl
+EXPANDING: mim2cc
+mimcap2contact
+EXPANDING: mim2cc/c2
+mimcap2contact
+EXPANDING: mim2cc/m5
+mimcap2contact
+EXPANDING: mimcc
+mimcapcontact
+EXPANDING: mimcc/c1
+mimcapcontact
+EXPANDING: mimcc/m4
+mimcapcontact
+EXPANDING: mrp1
+npolyres
+EXPANDING: mrp1,xhrpoly,uhrpoly,xpc
+xpolycontact npolyres ppolyres xpolyres
+EXPANDING: mvndc
+mvndcontact
+EXPANDING: mvndc,mvpdc
+mvndcontact mvpdcontact
+EXPANDING: mvndc/a
+mvndcontact
+EXPANDING: mvndc/li
+mvndcontact
+EXPANDING: mvndic
+mvndiodec
+EXPANDING: mvndic/a
+mvndiodec
+EXPANDING: mvndic/li
+mvndiodec
+EXPANDING: mvndiffres
+mvndiffres
+EXPANDING: mvnfet
+mvntransistor
+EXPANDING: mvnfet,mvnfetesd,mvnnfet,nnfet,mvpfet,mvpfetesd
+nntransistor mvntransistor mvptransistor mvnntransistor mvntransistoresd mvptransistoresd
+EXPANDING: mvnfet,mvnfetesd,mvvaractor,*mvndiff
+mvntransistor mvntransistoresd mvvaractor mvndiffusion mvndcontact
+EXPANDING: mvnfetesd
+mvntransistoresd
+EXPANDING: mvnnfet
+mvnntransistor
+EXPANDING: mvnsc
+mvnsubstratencontact
+EXPANDING: mvnsc/a
+mvnsubstratencontact
+EXPANDING: mvnsc/li
+mvnsubstratencontact
+EXPANDING: mvpdc
+mvpdcontact
+EXPANDING: mvpdc/a
+mvpdcontact
+EXPANDING: mvpdc/li
+mvpdcontact
+EXPANDING: mvpdic
+mvpdiodec
+EXPANDING: mvpdic/a
+mvpdiodec
+EXPANDING: mvpdic/li
+mvpdiodec
+EXPANDING: mvpdiffres
+mvpdiffres
+EXPANDING: mvpfet
+mvptransistor
+EXPANDING: mvpfet,mvpfetesd,*mvpdiff
+mvptransistor mvptransistoresd mvpdiffusion mvpdcontact
+EXPANDING: mvpfetesd
+mvptransistoresd
+EXPANDING: mvpsc
+mvpsubstratepcontact
+EXPANDING: mvpsc/a
+mvpsubstratepcontact
+EXPANDING: mvpsc/li
+mvpsubstratepcontact
+EXPANDING: mvrnd
+mvndiffres
+EXPANDING: mvrpd
+mvpdiffres
+EXPANDING: mvvar
+mvvaractor
+EXPANDING: mvvaractor
+mvvaractor
+EXPANDING: ndc
+ndcontact
+EXPANDING: ndc,pdc
+ndcontact pdcontact
+EXPANDING: ndc/a
+ndcontact
+EXPANDING: ndc/li
+ndcontact
+EXPANDING: ndc/li,nsc/li,pdc/li,psc/li,ndic/li,pdic/li,mvndc/li,mvnsc/li,mvpdc/li,mvpsc/li,mvndic/li,mvpdic/li
+ndcontact pdcontact mvndcontact mvpdcontact psubstratepcontact nsubstratencontact mvpsubstratepcontact mvnsubstratencontact pdiodec ndiodec mvpdiodec mvndiodec
+EXPANDING: ndic
+ndiodec
+EXPANDING: ndic/a
+ndiodec
+EXPANDING: ndic/li
+ndiodec
+EXPANDING: ndiff
+ndiffusion
+EXPANDING: ndiffres
+ndiffres
+EXPANDING: ndiodelvt
+ndiodelvt
+EXPANDING: nfet
+ntransistor
+EXPANDING: nfet,nfetlvt,pfet,pfethvt,pfetlvt,pfetmvt
+ntransistor ptransistor pfetlvt pfetmvt pfethvt nfetlvt
+EXPANDING: nfet,scnfet,scnfetlvt,npd,npass,nfetlvt,varactor,varhvt,*ndiff
+ntransistor scntransistor sramnfet srampassfet varactor nfetlvt scnfetlvt varactorhvt ndiffusion ndcontact
+EXPANDING: nfetlvt
+nfetlvt
+EXPANDING: nnfet
+nntransistor
+EXPANDING: npass
+srampassfet
+EXPANDING: npd
+sramnfet
+EXPANDING: npd,npass,ppu
+sramnfet srampassfet srampfet
+EXPANDING: npres
+npolyres
+EXPANDING: nsc
+nsubstratencontact
+EXPANDING: nsc/a
+nsubstratencontact
+EXPANDING: nsc/li
+nsubstratencontact
+EXPANDING: nsonos
+nsonos
+EXPANDING: obsm2
+obsm2
+EXPANDING: obsm3
+obsm3
+EXPANDING: obsm4
+obsm4
+EXPANDING: obsm5
+obsm5
+EXPANDING: obsmcon
+obsli1c
+EXPANDING: obsmcon/m1
+obsli1c
+EXPANDING: pc
+pcontact
+EXPANDING: pc/a
+pcontact
+EXPANDING: pc/li
+pcontact
+EXPANDING: pdc
+pdcontact
+EXPANDING: pdc/a
+pdcontact
+EXPANDING: pdc/li
+pdcontact
+EXPANDING: pdic
+pdiodec
+EXPANDING: pdic/a
+pdiodec
+EXPANDING: pdic/li
+pdiodec
+EXPANDING: pdiff
+pdiffusion
+EXPANDING: pdiffres
+pdiffres
+EXPANDING: pdiodehvt
+pdiodehvt
+EXPANDING: pdiodelvt
+pdiodelvt
+EXPANDING: pfet
+ptransistor
+EXPANDING: pfet,ppu,scpfet,mvpfet,mvpfetesd,pfetlvt,pfetmvt
+ptransistor scptransistor srampfet mvptransistor mvptransistoresd pfetlvt pfetmvt
+EXPANDING: pfet,scpfet,scpfethvt,ppu,pfetlvt,pfetmvt,pfethvt,*pdiff
+ptransistor scptransistor srampfet pfetlvt pfetmvt pfethvt scpfethvt pdiffusion pdcontact
+EXPANDING: pfethvt
+pfethvt
+EXPANDING: pfethvt,pdiodehvt,varactorhvt
+pfethvt varactorhvt pdiodehvt
+EXPANDING: pfetlvt
+pfetlvt
+EXPANDING: pfetlvt,nfetlvt,pdiodelvt,ndiodelvt
+pfetlvt nfetlvt pdiodelvt ndiodelvt
+EXPANDING: pfetmvt
+pfetmvt
+EXPANDING: photo
+photodiode
+EXPANDING: polyfill
+polyfill
+EXPANDING: ppu
+srampfet
+EXPANDING: psc
+psubstratepcontact
+EXPANDING: psc/a
+psubstratepcontact
+EXPANDING: psc/li
+psubstratepcontact
+EXPANDING: rli
+rlocali
+EXPANDING: rm1
+rmetal1
+EXPANDING: rm2
+rmetal2
+EXPANDING: rm3
+rmetal3
+EXPANDING: rm4
+rmetal4
+EXPANDING: rm5
+rmetal5
+EXPANDING: rmp
+rmp
+EXPANDING: rnd
+ndiffres
+EXPANDING: rpd
+pdiffres
+EXPANDING: scnfet
+scntransistor
+EXPANDING: scnfet,scpfet,scnfetlvt,scpfethvt
+scntransistor scptransistor scpfethvt scnfetlvt
+EXPANDING: scnfetlvt
+scnfetlvt
+EXPANDING: scpfet
+scptransistor
+EXPANDING: scpfethvt
+scpfethvt
+EXPANDING: scpfethvt,pfethvt,pdiodehvt,varactorhvt
+pfethvt scpfethvt varactorhvt pdiodehvt
+EXPANDING: uhrpoly
+xpolyres
+EXPANDING: v1
+m2contact
+EXPANDING: v1/m1
+m2contact
+EXPANDING: v1/m2
+m2contact
+EXPANDING: v2
+m3contact
+EXPANDING: v2/m2
+m3contact
+EXPANDING: v2/m3
+m3contact
+EXPANDING: v3
+via3
+EXPANDING: v3/m3
+via3
+EXPANDING: v3/m4
+via3
+EXPANDING: v4
+via4
+EXPANDING: v4/m4
+via4
+EXPANDING: v4/m5
+via4
+EXPANDING: var
+varactor
+EXPANDING: var,varhvt,mvvar
+varactor mvvaractor varactorhvt
+EXPANDING: varactor
+varactor
+EXPANDING: varactor,varhvt
+varactor varactorhvt
+EXPANDING: varactorhvt
+varactorhvt
+EXPANDING: varhvt
+varactorhvt
+EXPANDING: via2
+m3contact
+EXPANDING: via3
+via3
+EXPANDING: via3/m3
+via3
+EXPANDING: via4
+via4
+EXPANDING: via4/m4
+via4
+EXPANDING: xhrpoly
+ppolyres
+EXPANDING: xhrpoly,uhrpoly,xpc
+xpolycontact ppolyres xpolyres
+EXPANDING: xpc
+xpolycontact
+EXPANDING: xpc/li
+xpolycontact
+CUT HERE -------- CUT HERE

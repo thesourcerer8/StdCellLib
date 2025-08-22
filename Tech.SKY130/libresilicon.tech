@@ -14,7 +14,7 @@ tech
 end
 
 version
- version 1.0.530-1-g9d590c9
+ version 1.0.532-2-gc6d73a3
  description "SkyWater SKY130: Open Source rules and DRC"
  requires magic-8.3.411
 end
@@ -695,7 +695,7 @@ end
 cifoutput
 
 #----------------------------------------------------------------
-style gdsii
+style gdsii variants (),(origfill)
 # NOTE: This section is used for actual GDS output
 #----------------------------------------------------------------
  scalefactor 10  nanometers
