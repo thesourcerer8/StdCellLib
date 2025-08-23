@@ -10,21 +10,21 @@ stages:
 
 ls1u_lib_5v:
   stage: build
-  script: make ls1u_lib_5v
+  script: . /root/env/bin/activate && make ls1u_lib_5v
   artifacts:
     paths:
       - ls1u_lib_5v
 
 gf180_lib_3v3:
   stage: build
-  script: make gf180_lib_3v3
+  script: . /root/env/bin/activate && make gf180_lib_3v3
   artifacts:
     paths:
       - gf180_lib_3v3
 
 ihp_sg13g2_lib:
   stage: build
-  script: make ihp_sg13g2_lib
+  script: . /root/env/bin/activate && make ihp_sg13g2_lib
   artifacts:
     paths:
       - ihp_sg13g2_lib
