@@ -8,12 +8,12 @@ stages:
 
 # Standard Cell Lib Targets:
 
-ls1u_lib_5v:
+sky130_lib_3v3:
   stage: build
-  script: . /root/env/bin/activate && make ls1u_lib_5v
+  script: . /root/env/bin/activate && make sky130_lib_3v3
   artifacts:
     paths:
-      - ls1u_lib_5v
+      - sky130_lib_3v3
 
 gf180_lib_3v3:
   stage: build

@@ -178,3 +178,11 @@ ihp_sg13g2_lib:
 	cd ..
 	cp -r Catalog ihp_sg13g2_lib
 
+.PHONY: sky130_lib_3v3
+sky130_lib_3v3:
+	rm -f Tech
+	ln -s Tech.SKY130 Tech
+	PDK="sky130A" TARGETVOLTAGE="3.3V" $(MAKE) -C $(CATALOGDIR) -f GNUmakefile layout
+	cd ..
+	cp -r Catalog sky130_lib_3v3
+
