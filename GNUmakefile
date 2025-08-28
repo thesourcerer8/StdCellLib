@@ -170,13 +170,13 @@ gf180_lib_3v3:
 	cd ..
 	cp -r Catalog gf180_lib_3v3
 
-.PHONY: ihp_sg13g2_lib
-ihp_sg13g2_lib:
+.PHONY: ihp_sg13g2_lib_1v8
+ihp_sg13g2_lib_1v8:
 	rm -f Tech
 	ln -s Tech.SG13G2 Tech
-	PDK="ihp-sg13g2" TARGETVOLTAGE="3.3V" $(MAKE) -C $(CATALOGDIR) -f GNUmakefile layout
+	PDK="ihp-sg13g2" TARGETVOLTAGE="1.8V" $(MAKE) -C $(CATALOGDIR) -f GNUmakefile layout
 	cd ..
-	cp -r Catalog ihp_sg13g2_lib
+	cp -r Catalog ihp_sg13g2_lib_1v8
 
 .PHONY: sky130_lib_3v3
 sky130_lib_3v3:

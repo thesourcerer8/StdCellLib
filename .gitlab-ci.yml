@@ -22,10 +22,10 @@ gf180_lib_3v3:
     paths:
       - gf180_lib_3v3
 
-ihp_sg13g2_lib:
+ihp_sg13g2_lib_1v8:
   stage: build
-  script: . /root/env/bin/activate && make ihp_sg13g2_lib
+  script: . /root/env/bin/activate && make ihp_sg13g2_lib_1v8
   artifacts:
     paths:
-      - ihp_sg13g2_lib
+      - ihp_sg13g2_lib_1v8
 
