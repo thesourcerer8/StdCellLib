@@ -89,7 +89,6 @@ output_map_magic = {
             l_pwell: l_pwell,
             l_via1: l_via1,
             l_poly: l_poly,
-            l_abutment_box: ['abutment'],
             l_metal1: l_metal1,
             l_metal2: l_metal2,
             l_metal1_label: l_metal1,
@@ -148,30 +147,32 @@ routing_layers = {
 
 # Minimum spacing rules for layer pairs.
 min_spacing = {
-    (l_ndiffusion, l_ndiffusion): 270*nm,
-    (l_pdiffusion, l_ndiffusion): 270*nm,
-    (l_pdiffusion, l_pdiffusion): 270*nm,
-    (l_ndiffusion, l_poly_contact): 190*nm,
-    (l_pdiffusion, l_poly_contact): 190*nm,
-    (l_poly_contact, l_poly_contact): 190*nm,
-    (l_nwell, l_nwell): 1270*nm,
-    (l_nwell, l_pwell): 250*nm,
-    (l_pwell, l_pwell): 1270*nm,
-    (l_poly, l_ndiffusion): 75*nm,
-    (l_poly, l_pdiffusion): 75*nm,
-    (l_poly, l_poly): 210*nm,
-    (l_poly, l_pdiff_contact): 180*nm,
-    (l_poly, l_ndiff_contact): 180*nm,
-    (l_pdiff_contact, l_pdiff_contact): 270*nm,
-    (l_ndiff_contact, l_ndiff_contact): 270*nm,
-    (l_pdiff_contact, l_ndiff_contact): 270*nm,
+    (l_ndiffusion, l_ndiffusion): 50*nm,
+    (l_pdiffusion, l_ndiffusion): 50*nm,
+    (l_pdiffusion, l_pdiffusion): 50*nm,
+    (l_ndiffusion, l_poly_contact): 50*nm,
+    (l_pdiffusion, l_poly_contact): 50*nm,
+    (l_poly_contact, l_poly_contact): 50*nm,
+    (l_nwell, l_nwell): 50*nm,
+    (l_nwell, l_pwell): 50*nm,
+    (l_pwell, l_pwell): 50*nm,
+    (l_poly, l_ndiffusion): 70*nm,
+    (l_poly, l_pdiffusion): 70*nm,
+    (l_poly, l_poly): 50*nm,
+    (l_poly, l_pdiff_contact): 70*nm,
+    (l_poly, l_ndiff_contact): 70*nm,
+    (l_pdiff_contact, l_pdiff_contact): 50*nm,
+    (l_ndiff_contact, l_ndiff_contact): 50*nm,
+    (l_pdiff_contact, l_ndiff_contact): 50*nm,
     (l_metal1, l_metal1): 180*nm,
-    (l_metal2, l_metal2): 180*nm,
-    (l_via1, l_via1): 190*nm,
-    (l_poly_contact, l_pdiff_contact): 180*nm,
-    (l_poly_contact, l_ndiff_contact): 180*nm,
-    (l_ndiffusion, l_pplus): 75*nm,
-    (l_pdiffusion, l_nplus): 75*nm,
+    (l_metal2, l_metal2): 210*nm,
+    (l_via1, l_via1): 50*nm,
+    (l_poly_contact, l_pdiff_contact): 70*nm,
+    (l_poly_contact, l_ndiff_contact): 70*nm,
+    (l_nplus, l_pdiffusion): 300*nm,
+    (l_nplus, l_ndiffusion): 300*nm,
+    (l_pplus, l_pdiffusion): 300*nm,
+    (l_pplus, l_ndiffusion): 300*nm,
 }
 
 # Layer for the pins.
@@ -190,7 +191,7 @@ gate_length_pmos = 340*nm
 gate_length_nmos = 340*nm
 
 # Minimum length a polysilicon gate must overlap the silicon.
-gate_extension = 130*nm # (poly.8)
+gate_extension = 180*nm
 
 # Minimum distance of active area to upper or lower boundary of the cell. Basically determines the y-offset of the transistors.
 #transistor_offset_y = 240*nm # !!! This likely needs to be tuned later on # The 180/2*nm might have to be removed
@@ -229,15 +230,15 @@ minimum_pin_width = 130*nm
 wire_width = {
     l_ndiffusion: 180*nm,
     l_pdiffusion: 180*nm,
-    l_poly: 180*nm,
-    l_metal1: 180*nm,
-    l_metal2: 180*nm,
+    l_poly: 130*nm,
+    l_metal1: 160*nm,
+    l_metal2: 200*nm,
 }
 
 # Width of horizontal routing wires (overwrites `wire_width`).
 wire_width_horizontal = {
-    l_ndiffusion: 180*nm,
-    l_pdiffusion: 180*nm,
+    l_ndiffusion: 150*nm,
+    l_pdiffusion: 150*nm,
     l_poly: 180*nm,
     l_metal1: 180*nm,
     l_metal2: 180*nm,
@@ -253,32 +254,40 @@ via_size = {
 
 # Minimum width rules.
 minimum_width = {
-    l_pplus: 180*nm,
-    l_nplus: 180*nm,
-    l_ndiffusion: 180*nm,
-    l_pdiffusion: 180*nm,
-    l_poly: 180*nm, # (poly.1a), 
-    l_metal1: 180*nm,
-    l_metal2: 180*nm,
+    #l_pplus: 150*nm,
+    #l_nplus: 150*nm,
+    l_ndiffusion: 150*nm,
+    l_pdiffusion: 150*nm,
+    l_poly: 130*nm,
+    l_metal1: 160*nm,
+    l_metal2: 200*nm,
     l_nwell: 620*nm,
-    l_pwell: 620*nm    
+    l_pwell: 620*nm
 }
 
 minimum_enclosure = {
     (l_ndiffusion, l_ndiff_contact): 60*nm,
     (l_pdiffusion, l_pdiff_contact): 60*nm,
-    (l_poly, l_poly_contact): 80*nm,
-    (l_metal1, l_pdiff_contact): 80*nm,
-    (l_metal1, l_ndiff_contact): 80*nm,
-    (l_metal1, l_poly_contact): 80*nm,
-    (l_metal1, l_via1): 0*nm,
-    (l_metal2, l_via1): 60*nm,
-    (l_pwell, l_ndiffusion): 180*nm,
-    (l_nwell, l_pdiffusion): 180*nm,
+    (l_poly, l_poly_contact): 70*nm,
+    (l_poly, l_pdiff_contact): 70*nm,
+    (l_poly, l_pdiff_contact): 70*nm,
+    (l_metal1, l_pdiff_contact): 70*nm,
+    (l_metal1, l_ndiff_contact): 70*nm,
+    (l_metal1, l_poly_contact): 70*nm,
+    (l_metal1, l_via1): 50*nm,
+    (l_metal2, l_via1): 50*nm,
+    (l_pwell, l_ndiffusion): 240*nm,
+    (l_nwell, l_pdiffusion): 240*nm,
     (l_abutment_box, l_nwell): 0,
     (l_abutment_box, l_pwell): 0,
-    (l_nplus, l_ndiff_contact): 80*nm,
-    (l_pplus, l_pdiff_contact): 80*nm,
+    (l_nplus, l_ndiff_contact): 300*nm,
+    (l_pplus, l_pdiff_contact): 300*nm,
+    #(l_ndiffusion,l_nplus): 300*nm,
+    #(l_ndiffusion,l_pplus): 300*nm,
+    #(l_pdiffusion,l_nplus): 300*nm,
+    #(l_pdiffusion,l_pplus): 300*nm,
+    #(l_pwell, l_pplus): 300*nm,
+    #(l_nwell, l_nplus): 300*nm,
 }
 
 # Minimum notch rules.
@@ -287,7 +296,7 @@ minimum_notch = {
     l_pdiffusion: 130*nm,
     l_poly: 130*nm,
     l_metal1: 180*nm,
-    l_metal2: 180*nm,
+    l_metal2: 210*nm,
     l_nwell: 5*130*nm,
     l_pwell: 5*130*nm,
 }
@@ -306,18 +315,22 @@ orientation_change_penalty = 100000
 
 # Routing edge weights per data base unit.
 weights_horizontal = {
-    l_ndiffusion: 120000, # (mohms/square) taken from spreadsheet "Layer resistances and capacitances"
-    l_pdiffusion: 197000, # (mohms/square)
+    l_nwell: 3000000, # (mohms/square)
+    l_pwell: 3000000, # (mohms/square)
+    l_ndiffusion: 67000, # (mohms/square) taken from spreadsheet "Layer resistances and capacitances"
+    l_pdiffusion: 79000, # (mohms/square)
     l_poly: 48200*10, # (mohms/square) # 10 to avoid routing
-    l_metal1: 1280, # SKY130_Li1 Local Interconnect! (mohms/square)
-    l_metal2: 125, # SKY130_Metal1
+    l_metal1: 110,
+    l_metal2: 88,
 }
 weights_vertical = {
+    l_nwell: 3000000, # (mohms/square)
+    l_pwell: 3000000, # (mohms/square)
     l_ndiffusion: 120000, # (mohms/square) taken from spreadsheet "Layer resistances and capacitances"
     l_pdiffusion: 197000, # (mohms/square)
     l_poly: 48200*10, # (mohms/square) # 10 to avoid routing
-    l_metal1: 1280, # SKY130_Li1 Local Interconnect! (mohms/square)
-    l_metal2: 125, # SKY130_Metal1
+    l_metal1: 110,
+    l_metal2: 88,
 }
 
 viafactor = 1
