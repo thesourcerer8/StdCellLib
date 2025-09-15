@@ -98,8 +98,8 @@ output_map_magic = {
             l_ndiffusion: l_ndiffusion,
             l_pdiffusion: l_pdiffusion,
             l_poly_contact: "allcont",
-            l_pdiff_contact: "allcont",
-            l_ndiff_contact: "allcont",
+            l_pdiff_contact: "pdc",
+            l_ndiff_contact: "ndc",
             l_nplus: "nsd",
             l_pplus: "psd",
 }
@@ -196,7 +196,7 @@ gate_extension = 180*nm
 # Minimum distance of active area to upper or lower boundary of the cell. Basically determines the y-offset of the transistors.
 #transistor_offset_y = 240*nm # !!! This likely needs to be tuned later on # The 180/2*nm might have to be removed
 #transistor_offset_y = 0
-transistor_offset_y = 235*nm
+transistor_offset_y = 400*nm
 
 # Standard cell dimensions.
 # A 'unit cell' corresponds to the dimensions of the smallest possible cell. Usually an inverter.
@@ -303,8 +303,8 @@ minimum_notch = {
 
 # Minimum area rules.
 min_area = {
-    l_metal1: 0.0561 * um * um ,#  !!! TEMPORARILY DISABLED, PLEASE ENABLE AGAIN
-    l_metal2: 0.083 * um * um ,# !!! TEMPORARILY DISABLED, PLEASE ENABLE AGAIN
+#    l_metal1: 0.0561 * um * um ,#  !!! TEMPORARILY DISABLED, PLEASE ENABLE AGAIN
+#    l_metal2: 0.083 * um * um ,# !!! TEMPORARILY DISABLED, PLEASE ENABLE AGAIN
 }
 
 # ROUTING #
