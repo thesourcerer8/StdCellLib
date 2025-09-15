@@ -27,7 +27,8 @@ For simply generating the cells you can run the following command
 sudo rm -rf Catalog
 git checkout Catalog
 xhost +
-docker run -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v `pwd`:/work leviathanch/libresilicon-tools -l -c ". /root/env/bin/activate && cd /work/standard-cell-generator && make ihp_sg13g2_lib_1v8"
+docker run -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v `pwd`:/work leviathanch/libresilicon-tools -l -c \
+". /root/env/bin/activate && make ihp_sg13g2_lib_1v8"
 ```
 
 ### Interactive shell
