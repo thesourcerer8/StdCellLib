@@ -186,3 +186,7 @@ sky130_lib_3v3:
 	cd ..
 	cp -r Catalog sky130_lib_3v3
 
+.PHONY: dlayout
+dlayout:
+	docker run -it -e DISPLAY=$(DISPLAY) -e CELL=$(CELL) -v /tmp/.X11-unix:/tmp/.X11-unix -v `pwd`:/work leviathanch/libresilicon-tools -l -c ". /root/env/bin/activate && make ihp_sg13g2_lib_1v8"
+
