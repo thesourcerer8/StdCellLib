@@ -3,7 +3,7 @@ use strict;
 
 print STDERR "Fixing up .mag files\n";
 
-my $magictech=$ARGV[0] || "sky130A";
+my $magictech=$ARGV[0] || "../Tech/libresilicon.tech";
 
 foreach my $mag (<*.mag>)
 {

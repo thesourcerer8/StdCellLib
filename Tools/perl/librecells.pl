@@ -106,7 +106,6 @@ while(<IN>)
       undef $/;
       my $magcontent=<MAGIN>;
       $/=$old;
-      $magcontent=~s/tech sky130A/tech sky130A\nmagscale 1 2/s;
       $magcontent=~s/<< abutment >>\nrect /<< properties >>\nstring FIXED_BBOX /s;
       print MAGOUT $magcontent;
       close MAGIN;
@@ -249,7 +248,7 @@ EOF
     step("NEXT STEP: Characterization with CharLib:");
     # system_v("python3 ../Tools/python/gen_CharLib.py"); # Old CharLib and Libretto support
     system_v("perl ../Tools/perl/gencharlibyml.pl $cellname.cell");
-    $cmd="$usage charlib run $cellname.yml >>$cellname.log 2>>$cellname.err"; # Which Path should we use for CharLib?
+    $cmd="$usage charlib --debug run $cellname.yml >>$cellname.log 2>>$cellname.err"; # Which Path should we use for CharLib?
     system_v($cmd);
 
     step("NEXT STEP: Visualisation");

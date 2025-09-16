@@ -153,3 +153,36 @@ record:
 doc:
 	$(MAKE) -C $(DOCUMENTSDIR)/LaTeX -f GNUmakefile $@
 
+
+.PHONY: ls1u_lib_5v
+ls1u_lib_5v:
+	rm -f Tech
+	ln -s Tech.LS1UM Tech
+	PDK="ls1u5v" TARGETVOLTAGE="5V" $(MAKE) -C $(CATALOGDIR) -f GNUmakefile layout
+	cd ..
+	cp -r Catalog ls1u_lib_5v
+
+.PHONY: gf180_lib_3v3
+gf180_lib_3v3:
+	rm -f Tech
+	ln -s Tech.GF180MCU Tech
+	PDK="gf180mcu3v3" TARGETVOLTAGE="3.3V" $(MAKE) -C $(CATALOGDIR) -f GNUmakefile layout
+	cd ..
+	cp -r Catalog gf180_lib_3v3
+
+.PHONY: ihp_sg13g2_lib_1v8
+ihp_sg13g2_lib_1v8:
+	rm -f Tech
+	ln -s Tech.SG13G2 Tech
+	PDK="ihp-sg13g2" TARGETVOLTAGE="1.8V" $(MAKE) -C $(CATALOGDIR) -f GNUmakefile layout
+	cd ..
+	cp -r Catalog ihp_sg13g2_lib_1v8
+
+.PHONY: sky130_lib_3v3
+sky130_lib_3v3:
+	rm -f Tech
+	ln -s Tech.SKY130 Tech
+	PDK="sky130A" TARGETVOLTAGE="3.3V" $(MAKE) -C $(CATALOGDIR) -f GNUmakefile layout
+	cd ..
+	cp -r Catalog sky130_lib_3v3
+

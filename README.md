@@ -8,6 +8,40 @@ The second step is the automatic generation (layouting, characterization) of all
 In the final step, all the files are collected into the library files together that can then be used by e.g. qflow, yosys to go from RTL to GDS.
 
 
+## Run with Docker
+
+We have prepared a Docker image which can be pulled from Docker hub by simply runnin
+
+
+```
+docker pull leviathanch/libresilicon-tools
+```
+
+The Docker image provides a build of the most recent KLayout as well as ngspice and all our LibreSilicon tools. By enabling connections from the Docker container and mounting the X authority into the container, you can launch KLayout, Magic VLSI, etc.
+
+### Direct building
+
+For simply generating the cells you can run the following command 
+
+```
+sudo rm -rf Catalog
+git checkout Catalog
+xhost +
+docker run -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v `pwd`:/work leviathanch/libresilicon-tools -l -c \
+". /root/env/bin/activate && make ihp_sg13g2_lib_1v8"
+```
+
+### Interactive shell
+
+For entering the BASH shell, for instance when wanting to update the preinstalled libs of which the GIT repos can be found in the /root folder, you can enable X connections from the Docker and then simply run the default entry point.
+
+```
+xhost +
+docker run -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v `pwd`:/work leviathanch/libresilicon-tools
+```
+
+NOTE: There will be an automatic update script in /root soon
+
 ## Requirements
 
 ### Linux (Debian/Ubuntu or derivative)

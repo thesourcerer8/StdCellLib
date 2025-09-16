@@ -1,0 +1,500 @@
+
+Magic 8.3 revision 525 - Compiled on Sun Aug 10 18:44:26 UTC 2025.
+Starting magic under Tcl interpreter
+Using the terminal as the console.
+Using NULL graphics device.
+Input style sg13g2(): scaleFactor=2, multiplier=2
+The following types are not handled by extraction and will be treated as non-electrical types:
+    fillfet sealcont difffill nemitter hvnemitter hvisodiffres sealvia1 sealvia2 sealvia3 sealvia4 sealvia5 sealvia6 pad seal thruvia 
+Processing system .magicrc file
+Using technology "ihp-sg13g2", version 0.2.0
+CUT HERE -------- CUT HERE
+EXPANDING: hvndc
+hvndcontact
+EXPANDING: (hvndc,hvnsc)/m1
+hvndcontact hvnsubstratencontact
+EXPANDING: (hvndc,hvnsc,hvpdc,hvpsc)/a
+hvndcontact hvpdcontact hvpsubstratepcontact hvnsubstratencontact
+EXPANDING: hvpdc
+hvpdcontact
+EXPANDING: (hvpdc,hvpsc)/m1
+hvpdcontact hvpsubstratepcontact
+EXPANDING: ndc
+ndcontact
+EXPANDING: (ndc,nsc)/m1
+ndcontact nsubstratencontact
+EXPANDING: (ndc,nsc,pdc,psc,ndic,pdic)/a
+ndcontact pdcontact psubstratepcontact nsubstratencontact pdiodecont ndiodecont
+EXPANDING: pdc
+pdcontact
+EXPANDING: (pdc,psc)/m1
+pdcontact psubstratepcontact
+EXPANDING: *hvndiff
+hvndiffusion hvndcontact
+EXPANDING: *hvndiff,*hvpsd
+hvndiffusion hvndcontact hvpsubstratepdiff hvpsubstratepcontact
+EXPANDING: *hvndiff,hvnfet
+hvntransistor hvndiffusion hvndcontact
+EXPANDING: *hvndiff,hvnfet,hvnfetesd
+hvntransistor hvntransistoresd hvndiffusion hvndcontact
+EXPANDING: *hvndiff,hvnmosesd
+hvntransistoresd hvndiffusion hvndcontact
+EXPANDING: *hvnsc
+hvnsubstratencontact
+EXPANDING: *hvnsd
+hvnsubstratendiff hvnsubstratencontact
+EXPANDING: *hvpdiff
+hvpdiffusion hvpdcontact
+EXPANDING: *hvpdiff,hvpfet,hvpfetesd
+hvptransistor hvptransistoresd hvpdiffusion hvpdcontact
+EXPANDING: *hvpsd
+hvpsubstratepdiff hvpsubstratepcontact
+EXPANDING: *hvpsd,*psd
+psubstratepdiff hvpsubstratepdiff psubstratepcontact hvpsubstratepcontact
+EXPANDING: *m1
+hvvarcontact necontact hvnecontact ndcontact pdcontact hvndcontact hvpdcontact psubstratepcontact nsubstratencontact hvpsubstratepcontact hvnsubstratencontact pcontact pdiodecont ndiodecont schottkycont metal1 m2contact
+EXPANDING: *m1,rm1
+hvvarcontact necontact hvnecontact ndcontact pdcontact hvndcontact hvpdcontact psubstratepcontact nsubstratencontact hvpsubstratepcontact hvnsubstratencontact pcontact pdiodecont ndiodecont schottkycont metal1 rmetal1 m2contact
+EXPANDING: *m1,rm1,iprobe,diffprobe,sealv1
+hvvarcontact necontact hvnecontact ndcontact pdcontact hvndcontact hvpdcontact psubstratepcontact nsubstratencontact hvpsubstratepcontact hvnsubstratencontact pcontact pdiodecont ndiodecont schottkycont metal1 rmetal1 m2contact iprobe diffprobe sealvia1
+EXPANDING: *m2
+m2contact metal2 m3contact
+EXPANDING: *m2,rm2
+m2contact metal2 rmetal2 m3contact
+EXPANDING: *m3
+m3contact metal3 via3
+EXPANDING: *m3,rm3
+m3contact metal3 rmetal3 via3
+EXPANDING: *m4
+via3 metal4 via4
+EXPANDING: *m4,rm4
+via3 metal4 rmetal4 via4
+EXPANDING: *m5
+via4 metal5 via5
+EXPANDING: *m5,rm5
+via4 metal5 rmetal5 via5
+EXPANDING: *m6
+via5 mimcapcontact metal6 via6
+EXPANDING: *m6,rm6
+via5 mimcapcontact metal6 rmetal6 via6
+EXPANDING: *metal5
+via4 metal5 via5
+EXPANDING: *metal5/m5
+via4 metal5 via5
+EXPANDING: *mimcap
+mimcap mimcapcontact
+EXPANDING: *mimcc
+mimcapcontact
+EXPANDING: *ndi
+ndiode ndiodecont
+EXPANDING: *ndiff
+ndiffusion ndcontact
+EXPANDING: *ndiff,*ndiode,nfet
+ntransistor ndiffusion ndcontact ndiode ndiodecont
+EXPANDING: *ndiff,*psd
+ndiffusion ndcontact psubstratepdiff psubstratepcontact
+EXPANDING: *ndiff,nfet
+ntransistor ndiffusion ndcontact
+EXPANDING: *ndiode
+ndiode ndiodecont
+EXPANDING: *nsd
+nsubstratendiff nsubstratencontact
+EXPANDING: *obsm1
+obsm1
+EXPANDING: *pdi
+pdiode pdiodecont
+EXPANDING: *pdiff
+pdiffusion pdcontact
+EXPANDING: *pdiff,*hvpdiff
+pdiffusion hvpdiffusion pdcontact hvpdcontact
+EXPANDING: *pdiff,*pdiode,pfet
+ptransistor pdiffusion pdcontact pdiode pdiodecont
+EXPANDING: *pdiff,pfet
+ptransistor pdiffusion pdcontact
+EXPANDING: *pdiode
+pdiode pdiodecont
+EXPANDING: *poly
+polysilicon pcontact
+EXPANDING: *poly,allfets
+ntransistor ptransistor hvntransistor hvptransistor hvntransistoresd hvptransistoresd hvvaractor hvvarcontact hvpvaractor polysilicon pcontact
+EXPANDING: *poly,obspoly
+polysilicon pcontact obspoly
+EXPANDING: *psd
+psubstratepdiff psubstratepcontact
+EXPANDING: *psd,*hvpsd
+psubstratepdiff hvpsubstratepdiff psubstratepcontact hvpsubstratepcontact
+EXPANDING: *schottky
+schottky schottkycont
+EXPANDING: alldiff
+ntransistor ptransistor hvntransistor hvptransistor hvntransistoresd hvptransistoresd hvvaractor hvvarcontact hvpvaractor ndiffusion pdiffusion hvndiffusion hvpdiffusion ndcontact pdcontact hvndcontact hvpdcontact psubstratepdiff nsubstratendiff hvpsubstratepdiff hvnsubstratendiff psubstratepcontact nsubstratencontact hvpsubstratepcontact hvnsubstratencontact hvndiffres pdiode ndiode pdiodecont ndiodecont
+EXPANDING: alldiff,*poly,obspoly
+ntransistor ptransistor hvntransistor hvptransistor hvntransistoresd hvptransistoresd hvvaractor hvvarcontact hvpvaractor ndiffusion pdiffusion hvndiffusion hvpdiffusion ndcontact pdcontact hvndcontact hvpdcontact psubstratepdiff nsubstratendiff hvpsubstratepdiff hvnsubstratendiff psubstratepcontact nsubstratencontact hvpsubstratepcontact hvnsubstratencontact polysilicon pcontact obspoly hvndiffres pdiode ndiode pdiodecont ndiodecont
+EXPANDING: alldiff,isodiffres,hvisodiffres,sealc
+ntransistor ptransistor hvntransistor hvptransistor hvntransistoresd hvptransistoresd hvvaractor hvvarcontact hvpvaractor sealcont ndiffusion pdiffusion hvndiffusion hvpdiffusion ndcontact pdcontact hvndcontact hvpdcontact psubstratepdiff nsubstratendiff hvpsubstratepdiff hvnsubstratendiff psubstratepcontact nsubstratencontact hvpsubstratepcontact hvnsubstratencontact hvndiffres isodiffres hvisodiffres pdiode ndiode pdiodecont ndiodecont
+EXPANDING: alldiff,sealc
+ntransistor ptransistor hvntransistor hvptransistor hvntransistoresd hvptransistoresd hvvaractor hvvarcontact hvpvaractor sealcont ndiffusion pdiffusion hvndiffusion hvpdiffusion ndcontact pdcontact hvndcontact hvpdcontact psubstratepdiff nsubstratendiff hvpsubstratepdiff hvnsubstratendiff psubstratepcontact nsubstratencontact hvpsubstratepcontact hvnsubstratencontact hvndiffres pdiode ndiode pdiodecont ndiodecont
+EXPANDING: alldifflv
+ntransistor ptransistor ndiffusion pdiffusion ndcontact pdcontact psubstratepdiff nsubstratendiff psubstratepcontact nsubstratencontact pdiode ndiode pdiodecont ndiodecont
+EXPANDING: alldifflv,allpoly,*hvpdiff,*hvnsc
+ntransistor ptransistor hvntransistor hvptransistor hvntransistoresd hvptransistoresd hvvaractor hvvarcontact hvpvaractor ndiffusion pdiffusion hvpdiffusion ndcontact pdcontact hvpdcontact psubstratepdiff nsubstratendiff psubstratepcontact nsubstratencontact hvnsubstratencontact polysilicon pcontact npolyres ppolyres xpolyres pdiode ndiode pdiodecont ndiodecont
+EXPANDING: alldifflv,allpolynonfet,*hvpdiff,*hvpsd
+ntransistor ptransistor ndiffusion pdiffusion hvpdiffusion ndcontact pdcontact hvpdcontact psubstratepdiff nsubstratendiff hvpsubstratepdiff psubstratepcontact nsubstratencontact hvpsubstratepcontact polysilicon pcontact npolyres ppolyres xpolyres pdiode ndiode pdiodecont ndiodecont
+EXPANDING: allfets
+ntransistor ptransistor hvntransistor hvptransistor hvntransistoresd hvptransistoresd hvvaractor hvvarcontact hvpvaractor
+EXPANDING: allm1
+hvvarcontact necontact hvnecontact ndcontact pdcontact hvndcontact hvpdcontact psubstratepcontact nsubstratencontact hvpsubstratepcontact hvnsubstratencontact pcontact pdiodecont ndiodecont schottkycont metal1 rmetal1 m2contact iprobe
+EXPANDING: allm1,diffprobe,*obsm1,sealv1
+hvvarcontact necontact hvnecontact ndcontact pdcontact hvndcontact hvpdcontact psubstratepcontact nsubstratencontact hvpsubstratepcontact hvnsubstratencontact pcontact pdiodecont ndiodecont schottkycont metal1 rmetal1 m2contact obsm1 iprobe diffprobe sealvia1
+EXPANDING: allm1,diffprobe,sealv1
+hvvarcontact necontact hvnecontact ndcontact pdcontact hvndcontact hvpdcontact psubstratepcontact nsubstratencontact hvpsubstratepcontact hvnsubstratencontact pcontact pdiodecont ndiodecont schottkycont metal1 rmetal1 m2contact iprobe diffprobe sealvia1
+EXPANDING: allm1,obsm1
+hvvarcontact necontact hvnecontact ndcontact pdcontact hvndcontact hvpdcontact psubstratepcontact nsubstratencontact hvpsubstratepcontact hvnsubstratencontact pcontact pdiodecont ndiodecont schottkycont metal1 rmetal1 m2contact obsm1 iprobe
+EXPANDING: allm2
+m2contact metal2 rmetal2 m3contact
+EXPANDING: allm2,obsm2
+m2contact metal2 rmetal2 m3contact obsm2
+EXPANDING: allm2,sealv2
+m2contact metal2 rmetal2 m3contact sealvia2
+EXPANDING: allm2,sealv2,obsm2
+m2contact metal2 rmetal2 m3contact obsm2 sealvia2
+EXPANDING: allm3
+m3contact metal3 rmetal3 via3
+EXPANDING: allm3,obsm3
+m3contact metal3 rmetal3 obsm3 via3
+EXPANDING: allm3,sealv3
+m3contact metal3 rmetal3 via3 sealvia3
+EXPANDING: allm3,sealv3,obsm3
+m3contact metal3 rmetal3 obsm3 via3 sealvia3
+EXPANDING: allm4
+via3 metal4 rmetal4 via4
+EXPANDING: allm4,obsm4
+via3 metal4 rmetal4 obsm4 via4
+EXPANDING: allm4,obsm4,sealv4
+via3 metal4 rmetal4 obsm4 via4 sealvia4
+EXPANDING: allm4,sealv4
+via3 metal4 rmetal4 via4 sealvia4
+EXPANDING: allm5
+via4 metal5 rmetal5 via5
+EXPANDING: allm5,obsm5
+via4 metal5 rmetal5 obsm5 via5
+EXPANDING: allm5,obsm5,sealv5
+via4 metal5 rmetal5 obsm5 via5 sealvia5
+EXPANDING: allm5,sealv5
+via4 metal5 rmetal5 via5 sealvia5
+EXPANDING: allm6
+via5 mimcapcontact metal6 rmetal6 via6
+EXPANDING: allm6,obsm6
+via5 mimcapcontact metal6 rmetal6 obsm6 via6
+EXPANDING: allm6,obsm6,sealv6
+via5 mimcapcontact metal6 rmetal6 obsm6 via6 sealvia6
+EXPANDING: allm6,sealv6
+via5 mimcapcontact metal6 rmetal6 via6 sealvia6
+EXPANDING: allm7
+via6 metal7 rmetal7
+EXPANDING: allm7,obsm7
+via6 metal7 rmetal7 obsm7
+EXPANDING: allm7,obsm7,pillar,solder
+via6 metal7 rmetal7 obsm7 pillar solder
+EXPANDING: allm7,pillar,solder,pad
+via6 metal7 rmetal7 pillar solder pad
+EXPANDING: allnactive
+ntransistor hvntransistor hvntransistoresd ndiffusion hvndiffusion ndcontact hvndcontact nsubstratendiff hvnsubstratendiff nsubstratencontact hvnsubstratencontact hvndiffres ndiode ndiodecont
+EXPANDING: allndiffcont
+ndcontact hvndcontact nsubstratencontact hvnsubstratencontact ndiodecont
+EXPANDING: allnwell
+nwell obswell nbase
+EXPANDING: allpactive
+ptransistor hvptransistor hvptransistoresd pdiffusion hvpdiffusion pdcontact hvpdcontact psubstratepdiff hvpsubstratepdiff psubstratepcontact hvpsubstratepcontact pdiode pdiodecont
+EXPANDING: allpdiffcont
+pdcontact hvpdcontact psubstratepcontact hvpsubstratepcontact pdiodecont
+EXPANDING: allpoly
+ntransistor ptransistor hvntransistor hvptransistor hvntransistoresd hvptransistoresd hvvaractor hvvarcontact hvpvaractor polysilicon pcontact npolyres ppolyres xpolyres
+EXPANDING: allpolynonfet
+polysilicon pcontact npolyres ppolyres xpolyres
+EXPANDING: difffill
+difffill
+EXPANDING: difffill,fillfet
+fillfet difffill
+EXPANDING: diffprobe
+diffprobe
+EXPANDING: dnwell
+dnwell
+EXPANDING: fillfet
+fillfet
+EXPANDING: gec/a
+gecontact
+EXPANDING: hvisodiffres
+hvisodiffres
+EXPANDING: hvndc
+hvndcontact
+EXPANDING: hvndc/a
+hvndcontact
+EXPANDING: hvndc/m1
+hvndcontact
+EXPANDING: hvndiffres
+hvndiffres
+EXPANDING: hvndiffres,hvnmosesd
+hvntransistoresd hvndiffres
+EXPANDING: hvnec/a
+hvnecontact
+EXPANDING: hvnfet
+hvntransistor
+EXPANDING: hvnfetesd
+hvntransistoresd
+EXPANDING: hvnmosesd
+hvntransistoresd
+EXPANDING: hvnsc
+hvnsubstratencontact
+EXPANDING: hvnsc
+hvnsubstratencontact
+EXPANDING: hvnsc/m1
+hvnsubstratencontact
+EXPANDING: hvnsc/a
+hvnsubstratencontact
+EXPANDING: hvnsc/m1
+hvnsubstratencontact
+EXPANDING: hvpdc
+hvpdcontact
+EXPANDING: hvpdc/a
+hvpdcontact
+EXPANDING: hvpdc/m1
+hvpdcontact
+EXPANDING: hvpfet
+hvptransistor
+EXPANDING: hvpfetesd
+hvptransistoresd
+EXPANDING: hvpsc
+hvpsubstratepcontact
+EXPANDING: hvpsc
+hvpsubstratepcontact
+EXPANDING: hvpsc/a
+hvpsubstratepcontact
+EXPANDING: hvpsc/m1
+hvpsubstratepcontact
+EXPANDING: hvpsc/a
+hvpsubstratepcontact
+EXPANDING: hvpsc/m1
+hvpsubstratepcontact
+EXPANDING: iprobe
+iprobe
+EXPANDING: isodiffres
+isodiffres
+EXPANDING: m1
+metal1
+EXPANDING: m1fill
+m1fill
+EXPANDING: m2
+metal2
+EXPANDING: m2fill
+m2fill
+EXPANDING: m3
+metal3
+EXPANDING: m3fill
+m3fill
+EXPANDING: m4
+metal4
+EXPANDING: m4fill
+m4fill
+EXPANDING: m5
+metal5
+EXPANDING: m5fill
+m5fill
+EXPANDING: m6
+metal6
+EXPANDING: m6fill
+m6fill
+EXPANDING: m7
+metal7
+EXPANDING: m7,rm7
+metal7 rmetal7
+EXPANDING: m7fill
+m7fill
+EXPANDING: mimcc
+mimcapcontact
+EXPANDING: mimcc/m5
+
+EXPANDING: mimcc/m6
+mimcapcontact
+EXPANDING: ndc
+ndcontact
+EXPANDING: ndc,pdc,nsc,psc,ndic,pdic,hvndc,hvpdc,hvnsc,hvpsc
+ndcontact pdcontact hvndcontact hvpdcontact psubstratepcontact nsubstratencontact hvpsubstratepcontact hvnsubstratencontact pdiodecont ndiodecont
+EXPANDING: ndc/a
+ndcontact
+EXPANDING: ndc/m1
+ndcontact
+EXPANDING: ndic
+ndiodecont
+EXPANDING: ndic/a
+ndiodecont
+EXPANDING: ndic/m1
+ndiodecont
+EXPANDING: nec/a
+necontact
+EXPANDING: nfet
+ntransistor
+EXPANDING: npn
+pbase
+EXPANDING: npn,pnp
+pbase nbase
+EXPANDING: nres
+npolyres
+EXPANDING: nsc
+nsubstratencontact
+EXPANDING: nsc
+nsubstratencontact
+EXPANDING: nsc/m1
+nsubstratencontact
+EXPANDING: nsc/a
+nsubstratencontact
+EXPANDING: nsc/m1
+nsubstratencontact
+EXPANDING: nwell
+nwell
+EXPANDING: obsm1
+obsm1
+EXPANDING: obsm2
+obsm2
+EXPANDING: obsm3
+obsm3
+EXPANDING: obsm4
+obsm4
+EXPANDING: obsm5
+obsm5
+EXPANDING: obsm6
+obsm6
+EXPANDING: obsm7
+obsm7
+EXPANDING: obspoly
+obspoly
+EXPANDING: pad
+pad
+EXPANDING: pc
+pcontact
+EXPANDING: pc/a
+pcontact
+EXPANDING: pc/m1
+pcontact
+EXPANDING: pdc
+pdcontact
+EXPANDING: pdc/a
+pdcontact
+EXPANDING: pdc/m1
+pdcontact
+EXPANDING: pdic
+pdiodecont
+EXPANDING: pdic
+pdiodecont
+EXPANDING: pdic/a
+pdiodecont
+EXPANDING: pdic/a
+pdiodecont
+EXPANDING: pdic/m1
+pdiodecont
+EXPANDING: pdiff
+pdiffusion
+EXPANDING: pdiff,m1,m2,m3,m4,m5,m6
+pdiffusion metal1 metal2 metal3 metal4 metal5 metal6
+EXPANDING: pfet
+ptransistor
+EXPANDING: pillar
+pillar
+EXPANDING: pnp
+nbase
+EXPANDING: polyfill
+polyfill
+EXPANDING: polyfill,fillfet
+fillfet polyfill
+EXPANDING: pres
+ppolyres
+EXPANDING: pres,xres
+ppolyres xpolyres
+EXPANDING: psc
+psubstratepcontact
+EXPANDING: psc
+psubstratepcontact
+EXPANDING: psc/m1
+psubstratepcontact
+EXPANDING: psc/a
+psubstratepcontact
+EXPANDING: psc/m1
+psubstratepcontact
+EXPANDING: psd
+psubstratepdiff
+EXPANDING: rm1
+rmetal1
+EXPANDING: rm2
+rmetal2
+EXPANDING: rm3
+rmetal3
+EXPANDING: rm4
+rmetal4
+EXPANDING: rm5
+rmetal5
+EXPANDING: rm6
+rmetal6
+EXPANDING: rm7
+rmetal7
+EXPANDING: schottky
+schottky
+EXPANDING: sdic
+schottkycont
+EXPANDING: sdic/a
+schottkycont
+EXPANDING: sdic/m1
+schottkycont
+EXPANDING: seal
+seal
+EXPANDING: sealc
+sealcont
+EXPANDING: sealv1
+sealvia1
+EXPANDING: sealv2
+sealvia2
+EXPANDING: sealv3
+sealvia3
+EXPANDING: sealv4
+sealvia4
+EXPANDING: sealv5
+sealvia5
+EXPANDING: sealv6
+sealvia6
+EXPANDING: solder
+solder
+EXPANDING: v1
+m2contact
+EXPANDING: v1/m1
+m2contact
+EXPANDING: v1/m2
+m2contact
+EXPANDING: v2
+m3contact
+EXPANDING: v2/m2
+m3contact
+EXPANDING: v2/m3
+m3contact
+EXPANDING: v3
+via3
+EXPANDING: v3/m3
+via3
+EXPANDING: v3/m4
+via3
+EXPANDING: v4
+via4
+EXPANDING: v4/m4
+via4
+EXPANDING: v4/m5
+via4
+EXPANDING: v5
+via5
+EXPANDING: v5/m5
+via5
+EXPANDING: v5/m6
+via5
+EXPANDING: v6
+via6
+EXPANDING: v6/m6
+via6
+EXPANDING: xres
+xpolyres
+CUT HERE -------- CUT HERE

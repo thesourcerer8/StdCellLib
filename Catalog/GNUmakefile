@@ -240,3 +240,5 @@ charter:
 
 .PHONY: cell
 cell:       $(CELL)
+
+INV: INV.cell

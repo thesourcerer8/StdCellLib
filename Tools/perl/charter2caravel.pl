@@ -27,7 +27,7 @@ while(<IN>)
 }
 close IN;
 
-my $magictech=$ENV{'PDK'} || "gf180mcuD"; # MAGIC Technology name (.tech filename)
+my $magictech=$ENV{'PDK'} || "../Tech/libresilicon.tech"; # MAGIC Technology name (.tech filename)
 $ENV{'PDK'}=$magictech;
 
 sub getCellLibrary($)

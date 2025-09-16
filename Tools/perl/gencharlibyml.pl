@@ -5,6 +5,18 @@
 
 sub header()
 {
+  my $target_voltage=3.3;
+  my $TARGETVOLTAGE=$ENV{'TARGETVOLTAGE'};
+  if ($TARGETVOLTAGE =~ /^(\d+(\.\d+)?)V$/) {
+    $target_voltage=$1;
+  }
+
+  # TODO: Load this from config files
+  #my $slews="[0.2, 0.4]";
+  #my $loads="[0.6, 1.2]";
+  my $slews="[0.015, 0.04, 0.08, 0.2, 0.4]";
+  my $loads="[0.06, 0.18, 0.42, 0.6, 1.2]";
+
   print OUT <<EOF
 settings:
     lib_name: libresilicon-$ENV{'PDK'}
@@ -19,7 +31,7 @@ settings:
     named_nodes:
         vdd:
             name:       VDD
-            voltage:    3.3
+            voltage:    $target_voltage
         vss:
             name:       GND
             voltage:    0
@@ -28,20 +40,20 @@ settings:
             voltage:    0
         nwell:
             name:       VNW
-            voltage:    3.3
+            voltage:    $target_voltage
     cell_defaults:
         models:
 EOF
 ;
 # This is PDK dependent!
   print OUT <<EOF
-            - ../Tech.GF180MCU/sm141064.ngspice typical # This syntax tells CharLib to use the '.lib file section' syntax for this model
-            - ../Tech.GF180MCU/design.ngspice
+            - ../Tech/transistors.ngspice typical # This syntax tells CharLib to use the '.lib file section' syntax for this model
+            - ../Tech/design.ngspice
 EOF
 ;
   print OUT <<EOF
-        slews: [0.015, 0.04, 0.08, 0.2, 0.4]
-        loads: [0.06, 0.18, 0.42, 0.6, 1.2]
+        slews: $slews
+        loads: $loads
 cells:
 EOF
 ;

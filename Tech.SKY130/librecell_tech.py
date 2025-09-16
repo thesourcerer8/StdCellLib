@@ -116,6 +116,7 @@ output_writers = [
     MagWriter(
         tech_name='sky130A',
         scale_factor=0.2, # Scale all coordinates by this factor (rounded down to next integer).
+        magscale=[1,2],
         output_map=output_map_magic
     ),
 
@@ -196,7 +197,7 @@ min_spacing = {
 pin_layer = l_metal2 # lclayout.metal2 = sky130.metal1
 
 # Power stripe layer
-power_layer = l_metal1 # , l_metal2] # lclayout.metal2 = sky130.metal1
+power_layer = [l_metal1] # , l_metal2] # lclayout.metal2 = sky130.metal1
 
 # Layers that can be connected/merged without changing the schematic.
 # This can be used to resolve spacing/notch violations by just filling the space.
@@ -204,6 +205,8 @@ connectable_layers = {l_nwell, l_pwell, l_poly}
 # Width of the gate polysilicon stripe.
 # is reused as the minimum_width for the l_poly layer
 gate_length = 150*nm # (poly.1a)
+gate_length_pmos = gate_length
+gate_length_nmos = gate_length
 
 # Minimum length a polysilicon gate must overlap the silicon.
 gate_extension = 130*nm # (poly.8)

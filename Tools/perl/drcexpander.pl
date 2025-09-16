@@ -1,7 +1,7 @@
 print STDERR "DRC Expander - expands the DRC rules in MAGIC tech files and annotates the layers that might cause the DRC issues\n";
 
 # Original tech file:
-my $tech=$ARGV[0] || "/usr/local/lib/magic/sys/sky130A.tech";
+my $tech=$ARGV[0] || "../Tech/libresilicon.tech";
 my $expand=0;
 my $debug=0;
 my $createrules=0; # Create code for rules instead of expanding the tech file
