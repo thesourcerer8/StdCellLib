@@ -100,7 +100,7 @@ output_map_magic = {
             l_metal2_pin: l_metal2,
             l_ndiffusion: l_ndiffusion,
             l_pdiffusion: l_pdiffusion,
-            l_poly_contact: "allcont",
+            l_poly_contact: "polyc",
             l_pdiff_contact: "pdc",
             l_ndiff_contact: "ndc",
             l_nplus: "nsd",
