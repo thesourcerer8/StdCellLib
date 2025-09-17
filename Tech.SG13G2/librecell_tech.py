@@ -199,16 +199,13 @@ gate_extension = 180*nm # Gat.c
 # Minimum distance of active area to upper or lower boundary of the cell. Basically determines the y-offset of the transistors.
 #transistor_offset_y = 240*nm # !!! This likely needs to be tuned later on # The 180/2*nm might have to be removed
 #transistor_offset_y = 0
-transistor_offset_y = 270*nm
+transistor_offset_y = 330*nm
 
 # Standard cell dimensions.
 # A 'unit cell' corresponds to the dimensions of the smallest possible cell. Usually an inverter.
 # `unit_cell_width` also corresponds to the pitch of the gates because gates are spaced on a regular grid.
-unit_cell_width = 1440*nm # 480*3 (unit SITE) # 1380*nm # 920 is 2*0.46um (unithd SITE),  8 * 130*nm
-#unit_cell_width = 3330*nm # 480*3 (unit SITE) # 1380*nm # 920 is 2*0.46um (unithd SITE),  8 * 130*nm
-unit_cell_height = 3330*nm # (unit SITE) # 2720*nm #270*nm # 32 * 130*nm # minimum 16um due to pwell width + nwell-pwell spacing
-#assert unit_cell_height >= 16*um, "minimum 16um due to pwell width + nwell-pwell spacing"
-# due to nwell size and spacing requirements routing_grid_pitch_y * 8 # * 8
+unit_cell_width = 1440*nm # sg13g2_and2_1 is 2400nm wide -> 2400nm/2
+unit_cell_height = 3780*nm # sg13g2_and2_1 is 3780nm high
 
 # Routing pitch
 routing_grid_pitch_x = unit_cell_width // 6 # unit_cell_width // 8 // 2
@@ -219,7 +216,7 @@ grid_offset_x = routing_grid_pitch_x
 grid_offset_y = 0 # 0 # (routing_grid_pitch_y // 2 ) -10
 
 # Width of power rail.
-power_rail_width = 480*nm # compatible to SKY130 #  3*130*nm # decided by the standard cell library architect
+power_rail_width = 440*nm # compatible to sg13g2_inv_1
 
 # Minimum width of polysilicon gate stripes.
 # It increases w and l from the spice netlist, so it must be width from the spice netlist
