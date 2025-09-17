@@ -249,7 +249,7 @@ via_size = {
     l_poly_contact: 160*nm, # Cnt.a
     l_ndiff_contact: 160*nm, # Cnt.a
     l_pdiff_contact: 160*nm, # Cnt.a
-    l_via1: 190*nm, # V1.a
+    l_via1: 200*nm, # V1.a + 2 * M2.c # This is for MAGIC export, for GDS export it would be 190*nm
 }
 
 # Minimum width rules.

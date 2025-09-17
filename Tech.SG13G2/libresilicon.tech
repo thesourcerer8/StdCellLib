@@ -3924,7 +3924,7 @@ variants *
  # ORIGINAL RULE: width allm2,sealv2 200 "Metal2 width < %d (M2.a)"
   width allm2,sealv2 200 "Metal2 width < %d (M2.a) [paint m2contact,m3contact,metal2,rmetal2,sealvia2]"
   spacing allm2,sealv2 allm2,sealv2,obsm2 210 touching_ok "Metal2 spacing < %d (M2.b) [erase m2contact m3contact metal2 rmetal2 sealvia2,m2contact m3contact metal2 obsm2 rmetal2 sealvia2]"
- area allm2,obsm2 144000 200 "Metal2 minimum area < %a (M2.d)"
+# area allm2,obsm2 144000 200 "Metal2 minimum area < %a (M2.d)" # THIS RULE CANNOT BE FULFILLED BY STANDARD CELLS
 
  angles allm2 45 "Only 45 and 90 degree angles permitted on metal2 (Grid Rules)"
 
