@@ -199,7 +199,7 @@ gate_extension = 180*nm # Gat.c
 # Minimum distance of active area to upper or lower boundary of the cell. Basically determines the y-offset of the transistors.
 #transistor_offset_y = 240*nm # !!! This likely needs to be tuned later on # The 180/2*nm might have to be removed
 #transistor_offset_y = 0
-transistor_offset_y = 380*nm
+transistor_offset_y = 420*nm # 380 seems to be the minimum but it causes some violations with larger cells, 420 should do it, more might be useful against congestions, not sure what the upper limit is
 
 # Standard cell dimensions.
 # A 'unit cell' corresponds to the dimensions of the smallest possible cell. Usually an inverter.
