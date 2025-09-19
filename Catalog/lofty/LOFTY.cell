@@ -1,0 +1,33 @@
+.inputs asel_p asel_n bsel_p bsel_n muxsel_p muxsel_n usexor_p usexor_n usemux_p usemux_n 
+.outputs q
+.differential usemux_p usemux_n
+.differential asel_p asel_n
+.differential usexor_p usexor_n
+.differential bsel_p bsel_n
+.differential muxsel_p muxsel_n
+.ORDER "MOSFET Gate Drain Source"
+nmos usemux_p q N0
+nmos usemux_n q N1
+nmos asel_p N0 N00
+nmos asel_n N0 N01
+nmos usexor_p N00 gnd
+nmos usexor_n N00 N001
+nmos bsel_p N001 gnd
+nmos bsel_n N011 gnd
+nmos usexor_p N01 N001
+nmos usexor_n N01 N011
+nmos muxsel_n N1 N001
+nmos muxsel_p N1 N10
+nmos asel_p N10 gnd
+pmos usemux_n P0 q
+pmos usemux_p P1 q
+pmos asel_n P00 P0
+pmos asel_p P01 P0
+pmos usexor_p P001 P00
+pmos bsel_p vcc P001
+pmos usexor_n P001 P01
+pmos usexor_p P011 P01
+pmos bsel_n vcc P011
+pmos muxsel_p P001 P1
+pmos muxsel_n P10 P1
+pmos asel_p vcc P10

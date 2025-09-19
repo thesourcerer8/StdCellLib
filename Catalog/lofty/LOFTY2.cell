@@ -1,0 +1,50 @@
+.inputs usemux_p muxsel_p asel_p usexor_p bsel_p usemux_n muxsel_n asel_n usexor_n bsel_n
+.outputs q
+.ORDER "MOSFET Gate Drain Source"
+pmos usemux_p usemux_n vdd
+nmos usemux_p usemux_n gnd
+
+pmos muxsel_p muxsel_n vdd
+nmos muxsel_p muxsel_n gnd
+
+pmos asel_p asel_n vdd
+nmos asel_p asel_n gnd
+
+pmos usexor_p usexor_n vdd
+nmos usexor_p usexor_n gnd
+
+pmos bsel_p bsel_n vdd
+nmos bsel_p bsel_n gnd
+
+nmos usemux_n q usemux0n
+pmos usemux_p usemux0p q
+nmos usemux_p q usemux1n
+pmos usemux_n usemux1p q
+
+nmos muxsel_p usemux1n usemux1muxsel1n
+pmos muxsel_n usemux1muxsel1p usemux1p
+nmos muxsel_n usemux1n usemux1muxsel0n
+pmos muxsel_p usemux1muxsel0p usemux1p
+
+nmos asel_n usemux1muxsel0n gnd
+pmos asel_n vdd usemux1muxsel0p
+
+nmos bsel_n usemux1muxsel1n gnd
+pmos bsel_n vdd usemux1muxsel1p
+
+nmos asel_n usemux0n usemux0asel0n
+pmos asel_p usemux0asel0p usemux0p
+nmos asel_p usemux0n usemux0asel1n
+pmos asel_n usemux0asel1p usemux0p
+
+nmos usexor_n usemux0asel1n usemux1muxsel1n
+pmos usexor_p usemux1muxsel1p usemux0asel1p
+nmos usexor_p usemux0asel1n usemux1muxsel1usexor1n
+pmos usexor_n usemux1muxsel1usexor1p usemux0asel1p
+
+nmos bsel_p usemux1muxsel1usexor1n gnd
+pmos bsel_p vdd usemux1muxsel1usexor1p
+
+nmos usexor_n usemux0asel0n gnd
+nmos usexor_p usemux0asel0n usemux1muxsel1n
+pmos usexor_n usemux1muxsel1p usemux0asel0p
