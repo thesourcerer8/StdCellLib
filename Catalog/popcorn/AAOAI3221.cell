@@ -1,0 +1,22 @@
+3-2-2-1-input AND-AND-OR-AND-Invert gate
+.cell AAOAI3221
+.origin AAOI322
+.inputs D C1 C B1 B A2 A1 A 
+.outputs Y 
+pmos D N6 vdd vdd g 1 5 1
+pmos C1 N5 vdd vdd g 4 4 4
+pmos C N4 N5 vdd g 3 4 3
+pmos B1 N2 N4 vdd g 2 4 2
+pmos B N2 N4 vdd g 2 3 2
+pmos A2 Y N2 vdd g 1 3 1
+pmos A1 Y N2 vdd g 1 2 1
+pmos A Y N2 vdd g 1 1 1
+nmos D N6 gnd gnd 1 2 4 -2
+nmos C1 N4 N6 gnd 1 1 4 -1
+nmos C N4 N6 gnd 1 1 3 -1
+nmos B1 N3 N6 gnd 1 2 2 -2
+nmos B N2 N3 gnd 1 1 2 -1
+nmos A2 N1 N6 gnd 1 3 1 -3
+nmos A1 N N1 gnd 1 2 1 -2
+nmos A Y N gnd 1 1 1 -1
+.end

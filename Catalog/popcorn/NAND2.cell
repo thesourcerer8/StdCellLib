@@ -1,0 +1,10 @@
+2-input Not-AND (or NAND) gate
+.cell NAND2
+.origin INV
+.inputs A1 A 
+.outputs Y 
+pmos A1 Y vdd vdd g 1 2 1
+pmos A Y vdd vdd g 1 1 1
+nmos A1 N gnd gnd 1 2 1 -2
+nmos A Y N gnd 1 1 1 -1
+.end

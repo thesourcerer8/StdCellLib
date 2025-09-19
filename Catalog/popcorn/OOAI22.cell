@@ -1,0 +1,14 @@
+2-2-input OR-OR-AND-Invert gate
+.cell OOAI22
+.origin OAI21
+.inputs B1 B A1 A 
+.outputs Y 
+pmos B1 N2 vdd vdd g 2 2 2
+pmos B N1 N2 vdd g 1 2 1
+pmos A1 N vdd vdd g 2 1 2
+pmos A Y N vdd g 1 1 1
+nmos B1 N1 gnd gnd 1 2 3 -2
+nmos B N1 gnd gnd 1 2 2 -2
+nmos A1 Y N1 gnd 1 1 2 -1
+nmos A Y N1 gnd 1 1 1 -1
+.end

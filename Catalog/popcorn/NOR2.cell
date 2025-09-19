@@ -1,0 +1,10 @@
+2-input Not-OR (or NOR) gate
+.cell NOR2
+.origin INV
+.inputs A1 A 
+.outputs Y 
+pmos A1 N vdd vdd g 2 1 2
+pmos A Y N vdd g 1 1 1
+nmos A1 Y gnd gnd 1 1 2 -1
+nmos A Y gnd gnd 1 1 1 -1
+.end
