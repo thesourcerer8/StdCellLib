@@ -104,6 +104,7 @@ clean:
 	$(MAKE) -f simulation.mk $@
 	$(MAKE) -C $(TOOLSDIR)/popcorn -f GNUmakefile $@
 	$(MAKE) -C $(DOCUMENTSDIR)/LaTeX -f GNUmakefile $@
+	$(MAKE) -C Catalog -f GNUmakefile $@
 
 #   ----------------------------------------------------------------
 #               TOOLS
@@ -188,5 +189,14 @@ sky130_lib_3v3:
 
 .PHONY: dlayout
 dlayout:
+	cd Catalog
+	make clean
+	cd ..
 	docker run -it -e DISPLAY=$(DISPLAY) -e CELL=$(CELL) -v /tmp/.X11-unix:/tmp/.X11-unix -v `pwd`:/work leviathanch/libresilicon-tools -l -c ". /root/env/bin/activate && make ihp_sg13g2_lib_1v8"
+.PHONY: dlayoutall
+dlayoutall:
+	cd Catalog
+	make clean
+	cd ..
+	docker run -it -e DISPLAY=$(DISPLAY) -v /tmp/.X11-unix:/tmp/.X11-unix -v `pwd`:/work leviathanch/libresilicon-tools -l -c ". /root/env/bin/activate && make ihp_sg13g2_lib_1v8"
 
