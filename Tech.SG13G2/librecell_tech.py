@@ -277,17 +277,12 @@ minimum_enclosure = {
     (l_metal1, l_via1): 50*nm, # V1.c1
     (l_metal2, l_via1): 50*nm, # Vn.c1
     #(l_pwell, l_ndiffusion): 240*nm, # seems not to be defined
-    #(l_nwell, l_pdiffusion): 240*nm,
+    (l_nwell, l_pdiffusion): 240*nm,
+    (l_nwell, l_ndiffusion): 240*nm,
     (l_abutment_box, l_nwell): 0,
     (l_abutment_box, l_pwell): 0,
     (l_nplus, l_ndiff_contact): 90*nm, # Cnt.g1
     (l_pplus, l_pdiff_contact): 90*nm, # Cnt.g2
-    #(l_ndiffusion,l_nplus): 300*nm,
-    #(l_ndiffusion,l_pplus): 300*nm,
-    #(l_pdiffusion,l_nplus): 300*nm,
-    #(l_pdiffusion,l_pplus): 300*nm,
-    #(l_pwell, l_pplus): 300*nm,
-    #(l_nwell, l_nplus): 300*nm,
 }
 
 # Minimum notch rules.
