@@ -124,7 +124,8 @@ endif
 catalog:    $(CELLS) 
 	
 .PHONY: layout
-layout: libresilicon.sp libresilicon.lef libresilicon.lib demoboard.mag doc/StdCellLib.pdf demoboard.svg
+#layout: libresilicon.sp libresilicon.lef libresilicon.lib demoboard.mag doc/StdCellLib.pdf demoboard.svg
+layout: libresilicon.sp libresilicon.lef demoboard.mag doc/StdCellLib.pdf demoboard.svg
 
 libresilicon.sp: *.cell ../Tech/librecell_tech.py ../Tools/perl/cell2spice.pl ../Tools/perl/librecells.pl ../Tech/nmos.sp
 	../Tools/perl/cell2spice.pl
@@ -140,10 +141,10 @@ buildreport:
 libresilicon.lef: *.cell libresilicon.sp
 	../Tools/perl/lefgen.pl outputlib/*.lef >libresilicon.lef
 
-%.lib : %.sp:
+%.lib: %.sp:
 	../Tools/perl/librecells_charlib.pl $< $@
 
-libresilicon.lib: *.sp
+#libresilicon.lib: *.lib
 #	../Tools/perl/libgen.pl >libresilicon.libtemplate
 #	rm -f libresilicon.lib
 #	libertymerge -b libresilicon.libtemplate -o libresilicon.lib -u *.lib
