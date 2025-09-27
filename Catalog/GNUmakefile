@@ -128,6 +128,7 @@ catalog:    $(CELLS)
 layout: libresilicon.sp libresilicon.lef demoboard.mag doc/StdCellLib.pdf demoboard.svg
 
 libresilicon.sp: *.cell ../Tech/librecell_tech.py ../Tools/perl/cell2spice.pl ../Tools/perl/librecells.pl ../Tech/nmos.sp
+	echo "Generating the cells $(CELLS)"
 	../Tools/perl/cell2spice.pl
 	../Tools/perl/librecells.pl
 
