@@ -141,7 +141,7 @@ buildreport:
 libresilicon.lef: *.cell libresilicon.sp
 	../Tools/perl/lefgen.pl outputlib/*.lef >libresilicon.lef
 
-%.lib: %.sp:
+%.lib: %.sp
 	../Tools/perl/librecells_charlib.pl $< $@
 
 #libresilicon.lib: *.lib
