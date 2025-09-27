@@ -130,9 +130,6 @@ layout: libresilicon.sp libresilicon.lef libresilicon.lib demoboard.mag doc/StdC
 libresilicon.sp: *.cell ../Tech/librecell_tech.py ../Tools/perl/cell2spice.pl ../Tools/perl/librecells.pl ../Tech/nmos.sp
 	../Tools/perl/cell2spice.pl
 	../Tools/perl/librecells.pl
-	rm -f libresilicon.lib
-	../Tools/perl/libgen.pl >libresilicon.libtemplate
-	libertymerge -b libresilicon.libtemplate -o libresilicon.lib -u *.lib
 
 demoboard.mag: *.cell libresilicon.sp
 	perl ../Tools/perl/demoboard.pl >demoboard.mag
