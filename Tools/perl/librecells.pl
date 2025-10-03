@@ -232,6 +232,8 @@ EOF
 ;
     close OUT;
 
+    step("NEXT STEP: mag2svg");
+    system "../Tools/perl/mag2svg.pl $cellname.mag $cellname.svg" if(-f "$cellname.mag");
 
 
     step("NEXT STEP: Generating Liberty Template");
@@ -258,8 +260,6 @@ EOF
     #system "gds2mag --config ~/libresilicon/gds2mag/example/example_config.toml -i outputlib/$1.gds -o _$1.mag";
     #    exit; # Stop after doing one cell
 
-    step("NEXT STEP: mag2svg");
-    system "../Tools/perl/mag2svg.pl $cellname.mag $cellname.svg" if(-f "$cellname.mag");
     step("NEXT STEP: mag2siliwiz");
     system "../Tools/perl/mag2siliwiz.pl <$cellname.mag >$cellname.json" if(-f "$cellname.mag");
 
