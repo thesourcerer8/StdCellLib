@@ -1,0 +1,9 @@
+.cell DRIVER_LOGIC
+.inputs I E
+.outputs O 
+pmos E 1 vdd vdd g 1 1 +1
+nmos E 1 gnd gnd 1 1 1 -1
+pmos I 2 vdd vdd g 1 1 +1
+pmos E O 2 2 g 1 1 +1
+nmos 1 O 3 3 1 1 1 -1
+nmos I 3 gnd gnd 1 1 1 -1
