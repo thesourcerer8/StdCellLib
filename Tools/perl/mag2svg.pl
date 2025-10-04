@@ -17,7 +17,7 @@ our $csscolors="";
 
 sub initColors()
 {
-  my $dir=$ENV{'MAGIC_DIR'} || "/usr/local/lib/magic/sys";	 
+  my $dir=$ENV{'MAGIC_DIR'} || "/usr/local/lib/magic/sys";
   if(open(IN,"<$dir/mos.24bit.std.cmap"))
   {
     while(<IN>)
@@ -42,11 +42,11 @@ sub initColors()
 	#print "$8:$c\n";
       }
     }
-    close IN;    
+    close IN;
   }
   foreach my $tech (<$dir/*.tech>)
   {
-    #print "tech$tech\n";	  
+    #print "tech$tech\n";
     open IN,"<$tech";
     while(<IN>)
     {
@@ -124,10 +124,10 @@ if(-f "$mag.mag")
       system "$0 $flat.mag $svg $tech";
       unlink $flat;
       exit;
-    }	     
+    }
     elsif(m/^rect (\-?\d+\.?\d*) (\-?\d+\.?\d*) (\-?\d+\.?\d*) (\-?\d+\.?\d*)/)
     {
-      #print "Rect\n";	    
+      #print "Rect\n";
       next if(defined($ignorelayers{$layer}));
       my $width=$3-$1;
       my $height=$4-$2;
@@ -158,8 +158,9 @@ if(-f "$mag.mag")
   if($width)
   {
     print "Writing $svg\n";
-    open OUT,">$svg";
-    print OUT <<EOF
+    if(open OUT,">$svg")
+    {
+      print OUT <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="$limits[1] $limits[2] $width $height" version="1.1">
 <style type="text/css">
@@ -191,8 +192,13 @@ $csscolors
 $rects
 </svg>
 EOF
-    ;  
-    close OUT;
+      ;
+      close OUT;
+    }
+    else
+    {
+      print "Error when writing svg to $svg: $!\n";
+    }
   }
   else
   {

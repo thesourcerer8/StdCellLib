@@ -99,6 +99,7 @@ foreach my $file (<*.cell>)
   my $magfile=$file; $magfile=~s/\.cell$/.mag/;
   my $drcfile=$file; $drcfile=~s/\.cell$/.drc/;
   my $libfile=$file; $libfile=~s/\.cell$/.lib/;
+  my $libtemplatefile=$file; $libtemplatefile=~s/\.cell$/.libtemplate/;
   my $svgfile=$file; $svgfile=~s/\.cell$/.svg/;
   my $usagefile=$file; $usagefile=~s/\.cell$/.usage/;
   my $schfile="doc/".$file; $schfile=~s/\.cell$/_svg.png/;
@@ -147,11 +148,19 @@ foreach my $file (<*.cell>)
   print OUT "<td>".(-f $spfile?"<a href='$spfile' target='_blank'><font color='green'>&check;</font></a>":"<font color='red' title='$spfile missing'>X</font>")."</td>";
   print OUT "<td>".(-f $spicefile?"<a href='$spicefile' target='_blank'><font color='green'>&check;</font></a>":"<font color='red' title='$spicefile missing'>X</font>")."</td>";
 
-  if(open LIB,"<$libfile")
+  if(open LIB,"<$libtemplatefile")
   {
     while(<LIB>)
     {
-      $area=$1 if m/area:\s*(\d+)\.?\d*\s*/;
+      $area=$1 if m/area ?:\s*(\d+)\.?\d*\s*/;
+    }
+    close LIB;
+  }
+  if(open LIB,"<$logfile")
+  {
+    while(<LIB>)
+    {
+       $nets=$1 if(m/Nets output: (\d+)/);
     }
     close LIB;
   }
@@ -162,8 +171,7 @@ foreach my $file (<*.cell>)
       $lvs=$1 if(m/LVS result: (\w+)/ && $lvs eq "");
       $euler=$1 if m/Number of deduplicated eulertours: (\d+)/;
       $layouttime=$1 if(m/INFO:\s*Done\s*\(Total duration: ([\d:.]+)\s*\)/);
-      $nets=$1 if(m/Nets output: (\d+)/);
-      $routing=$1 if(m/Routing iteration (\d+)/);
+      $routing=$1 if(m/Routing iteration (\d+)/ && $1);
       $ports=scalar(split(",",$1)) if(m/Subcircuit ports: (.*)/);
       $errors.=$1." " if(m/AssertionError: (.*)/);
       $errors.=$1." " if(m/Exception: (.*)/);
