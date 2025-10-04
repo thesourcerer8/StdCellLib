@@ -50,7 +50,19 @@ foreach my $fn (@cells)
     {
       $ios.=" ".$2;
     }
-    if(m/^([pn]mos) (\w+) (\w+) (\w+)/i)
+    if(m/^([pn]mos) (\w+) (\w+) (\w+) (\w+)/i)
+    {
+      my($t,$g,$d,$s,$x)=($1,$2,$3,$4,$5);
+      $transistors.="M$M ".uc("$d $g $s $x")." $t ".(($t eq "pmos") ? $ptech:$ntech)."\n";
+            #M1  vdd    B a_2_6# vdd pmos w=0.5u l=0.05u
+            #M2  Y a_2_6# vdd vdd pmos w=0.5u l=0.05u
+            #M3  a_9_6# A a_2_6# gnd nmos w=0.5u l=0.05u
+            #M4  gnd    B a_9_6# gnd nmos w=0.5u l=0.05u
+            #M5  Y a_2_6# gnd gnd nmos w=0.25u l=0.05u
+	    #$transistors.="+ ad=0p pd=0u as=0p ps=0u\n";
+      $M++;
+    }
+    elsif(m/^([pn]mos) (\w+) (\w+) (\w+)/i)
     {
       my($t,$g,$d,$s)=($1,$2,$3,$4);
       my $x=($t eq "pmos")?"vdd":"gnd";
