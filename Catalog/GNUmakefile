@@ -124,15 +124,13 @@ endif
 catalog:    $(CELLS) 
 	
 .PHONY: layout
-layout: libresilicon.sp libresilicon.lef libresilicon.lib demoboard.mag doc/StdCellLib.pdf demoboard.svg
-
+#layout: libresilicon.sp libresilicon.lef libresilicon.lib demoboard.mag doc/StdCellLib.pdf demoboard.svg
+layout: libresilicon.sp libresilicon.lef demoboard.mag doc/StdCellLib.pdf demoboard.svg
 
 libresilicon.sp: *.cell ../Tech/librecell_tech.py ../Tools/perl/cell2spice.pl ../Tools/perl/librecells.pl ../Tech/nmos.sp
+	echo "Generating the cells $(CELLS)"
 	../Tools/perl/cell2spice.pl
 	../Tools/perl/librecells.pl
-	rm -f libresilicon.lib
-	../Tools/perl/libgen.pl >libresilicon.libtemplate
-	libertymerge -b libresilicon.libtemplate -o libresilicon.lib -u *.lib
 
 demoboard.mag: *.cell libresilicon.sp
 	perl ../Tools/perl/demoboard.pl >demoboard.mag
@@ -144,10 +142,13 @@ buildreport:
 libresilicon.lef: *.cell libresilicon.sp
 	../Tools/perl/lefgen.pl outputlib/*.lef >libresilicon.lef
 
-libresilicon.lib: *.cell libresilicon.sp
-	../Tools/perl/libgen.pl >libresilicon.libtemplate
-	rm -f libresilicon.lib
-	libertymerge -b libresilicon.libtemplate -o libresilicon.lib -u *.lib
+%.lib: %.sp
+	../Tools/perl/librecells_charlib.pl $< $@
+
+#libresilicon.lib: *.lib
+#	../Tools/perl/libgen.pl >libresilicon.libtemplate
+#	rm -f libresilicon.lib
+#	libertymerge -b libresilicon.libtemplate -o libresilicon.lib -u *.lib
 
 
 .PHONY: qflow
