@@ -10,21 +10,21 @@ stages:
 
 sky130_lib_3v3:
   stage: build
-  script: . /root/env/bin/activate && make sky130_lib_3v3
+  script: . ~/.venv/bin/activate && make sky130_lib_3v3
   artifacts:
     paths:
       - sky130_lib_3v3
 
 gf180_lib_3v3:
   stage: build
-  script: . /root/env/bin/activate && make gf180_lib_3v3
+  script: . ~/.venv/bin/activate && make gf180_lib_3v3
   artifacts:
     paths:
       - gf180_lib_3v3
 
 ihp_sg13g2_lib_1v8:
   stage: build
-  script: . /root/env/bin/activate && make ihp_sg13g2_lib_1v8
+  script: . ~/.venv/bin/activate && make ihp_sg13g2_lib_1v8
   artifacts:
     paths:
       - ihp_sg13g2_lib_1v8
