@@ -201,8 +201,8 @@ connectable_layers = {l_nwell, l_pwell, l_poly}
 # Width of the gate polysilicon stripe.
 # is reused as the minimum_width for the l_poly layer
 #gate_length_pmos = 280*nm # 140 # 70
-gate_length_pmos = 130*nm
-gate_length_nmos = 130*nm
+gate_length_pmos = 150*nm
+gate_length_nmos = 150*nm
 
 # Minimum length a polysilicon gate must overlap the silicon.
 gate_extension = 180*nm # Gat.c
@@ -231,8 +231,8 @@ power_rail_width = 440*nm # compatible to sg13g2_inv_1
 
 # Minimum width of polysilicon gate stripes.
 # It increases w and l from the spice netlist, so it must be width from the spice netlist
-minimum_gate_width_nfet = 150*nm # (poly.1a)
-minimum_gate_width_pfet = 150*nm # (poly.1a)
+minimum_gate_width_nfet = 130*nm # (poly.1a)
+minimum_gate_width_pfet = 130*nm # (poly.1a)
 
 # Minimum width for pins.
 minimum_pin_width = 130*nm 
