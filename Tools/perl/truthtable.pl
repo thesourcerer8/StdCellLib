@@ -12,6 +12,9 @@ GetOptions ("debug" => \$debug,
 	    "v" => \$debug,
             "format=s" => \$format);
 
+our $highz_seen = 0;
+our @original_ins = ();
+
 our $testcadcounter=1; # counts the inputs, only needed for testcad output
 
 # Convert a value to the gray code value:
@@ -40,15 +43,15 @@ sub truth
 {
   my @lines=@{$_[0]}; # lines from the netlist which contains transistors
   my %values=%{$_[1]}; # input values (input name -> input value)
+  my %strong=%{$_[2]}; # New: strong input names
 
   verb "\nCalculating Truth table ...\n";
 
   my @todo=@lines; # Any transistors that have been switched and delivered a voltage already do not need to be tried again in the next step
-  my %iv=%values; # input vectors
-
-  #verb "Input A: $iv{A}-$values{A}\n";
-  verb "Inputs: "; verb "$_=$iv{$_} " foreach(sort keys %iv); verb "\n";
-
+  my %iv=%values; # input values
+  my %iv_strong=%strong; # strong source flags
+  foreach (keys %iv) { $iv_strong{$_}=1 if m/^(vdd|gnd)$/i; }
+  $iv_strong{vdd}=1; $iv_strong{gnd}=1;
 
   my $done=0; # Are we done yet?
   my $hadwork=0; # Here we will remember whether any progress was made during a step
@@ -61,90 +64,66 @@ sub truth
     {
       s/\s+$//m;
       verb "Line: $_\n";
+      my @nets=();
       if(m/^res (\w+) (\w+) (\d+\.?\d*)/i) # We assume that resistors have a low resistance and pass the current
       {
-        my ($n1,$n2,$v)=($1,$2,$3);
-        verb "Resistor found\n";
-        my $i1=($n1=~m/^(vdd|gnd)$/i)?$n1:(defined($iv{$n1}) && $iv{$n1}=~m/^(vdd|gnd|0|1)$/i)?$iv{$n1}:undef;
-        verb "i1: ".($i1||"")."\n";
-        my $i2=($n2=~m/^(vdd|gnd)$/i)?$n2:(defined($iv{$n2}) && $iv{$n2}=~m/^(vdd|gnd|0|1)$/i)?$iv{$n2}:undef;
-        verb "i2: ".($i2||"")."\n";
-        if((defined($i1) && defined($i2)) && (($i1=~m/vdd/i && $i2=~m/gnd/i) || ($i1=~m/vdd/i && $i2=~m/gnd/i)))
-        { # looking for a short circuit between vdd and gnd
-          die "ERROR: Short circuit detected: $n1->$i1->$iv{$n1} $n2->$i2->$iv{$2}!\n";
-        }
-        if(defined($i1)) # we have a voltage flowing from i1 to i2
-        {
-          verb "Setting: $n2 <= $i1\n";
-          $iv{$n2}=$i1;
-        }
-        if(defined($i2)) # we have a voltage flowing from i2 to i1
-        {
-          verb "Setting: $n1 <= $i2\n";
-          $iv{$n1}=$i2;
-        }
-        $hadwork=1 if(defined($i1) || defined($i2));
-        push @nexttodo,$_ if((!defined($iv{$n1})) && (!defined($iv{$n2})));
-        verb "Status: Net1: $n1-".($iv{$n1}||"")." Net2: $n2-".($iv{$n2}||"")."\n";
+        @nets=($1,$2);
       }
-      if(m/^([pn]mos) (\w+) (\w+) (\w+)/i) # We are handling a Transistor here
+      elsif(m/^([pn]mos) (\w+) (\w+) (\w+)/i) # We are handling a Transistor here
       {
         my ($tr,$gate,$drain,$source)=($1,$2,$3,$4);
-       	#$drain=~s/^(\d+)$/$tr$1/; This was necessary when popcorn generated same names for different internal nets in nmos and pmos
-        #$source=~s/^(\d+)$/$tr$1/; But it failed for less structured cells (e.g. transmission gates)
         verb "Transistor: $_\n";
-  
         if(defined($iv{$gate}))
         {
           my $gatevalue=$iv{$gate}; $gatevalue=~s/vdd/1/i; $gatevalue=~s/gnd/0/i;
           my $conducting=$gatevalue ^ ($tr=~m/nmos/i ?0:1);
-          if($conducting)
-          {
-            verb "Transitor conducting\n";
-            verb "drain: $drain iv{drain}=".($iv{$drain}||"")."\n";
-            verb "source: $source iv{source}=".($iv{$source}||"")."\n";
-            my $idrain=($drain=~m/^(vdd|gnd)$/i)?$drain:(defined($iv{$drain}) && $iv{$drain}=~m/^(vdd|gnd|0|1)$/i)?$iv{$drain}:undef;
-            verb "idrain: ".($idrain||"")."\n";
-	    my $isource=($source=~m/^(vdd|gnd)$/i)?$source:(defined($iv{$source}) && $iv{$source}=~m/^(vdd|gnd|0|1)$/i)?$iv{$source}:undef;
-	    verb "isource: ".($isource||"")."\n";
+          if($conducting) { @nets=($drain,$source); }
+          else { verb "Transistor not conducting\n"; next; }
+        }
+        else { verb "No information yet.\n"; push @nexttodo,$_; next; }
+      }
+      else { next; }
 
-	    if((defined($idrain) && defined($isource)) && (($idrain=~m/vdd/i && $isource=~m/gnd/i) || ($idrain=~m/vdd/i && $isource=~m/gnd/i)))
-	    {
-              die "ERROR: Short circuit detected: $drain->$idrain->$iv{$drain} $source->$isource->$iv{$source}!\n";
-	    }
-            if(defined($idrain))
-	    {
-              verb "Setting: $source <= $idrain\n";
-              $iv{$source}=$idrain;
-	    }
-            if(defined($isource))
-	    {
-              verb "Setting: $drain <= $isource\n";
-              $iv{$drain}=$isource;
-            }
-            $hadwork=1 if(defined($isource) || defined($idrain));
-	    push @nexttodo,$_ if((!defined($iv{$source})) && (!defined($iv{$drain})));
-	    verb "Status: Source: $source-".($iv{$source}||"")." Drain: $drain-".($iv{$drain}||"")."\n";
-          }
-	  else
-	  {
-            verb "Transistor not conducting\n";
-	  }
-        } 
-        else
+      # Propagate between @nets (e.g., Drain <-> Source)
+      my ($n1, $n2) = @nets;
+      my $i1=($n1=~m/^(vdd|gnd)$/i)?$n1:(defined($iv{$n1}) && $iv{$n1}=~m/^(vdd|gnd|0|1)$/i)?$iv{$n1}:undef;
+      my $i1_strong = ($n1=~m/^(vdd|gnd)$/i || $iv_strong{$n1}) ? 1 : 0;
+      my $i2=($n2=~m/^(vdd|gnd)$/i)?$n2:(defined($iv{$n2}) && $iv{$n2}=~m/^(vdd|gnd|0|1)$/i)?$iv{$n2}:undef;
+      my $i2_strong = ($n2=~m/^(vdd|gnd)$/i || $iv_strong{$n2}) ? 1 : 0;
+
+      if(defined($i1) && defined($i2))
+      {
+        my ($v1, $v2) = ($i1, $i2);
+        $v1=~s/vdd/1/i; $v1=~s/gnd/0/i;
+        $v2=~s/vdd/1/i; $v2=~s/gnd/0/i;
+        if($v1 ne $v2 && $i1_strong && $i2_strong)
         {
-          verb "No information yet.\n";
-          push @nexttodo,$_;
+          die "ERROR: Short circuit detected: $n1->$i1 $n2->$i2!\n";
         }
       }
+      
+      # Directional propagation
+      if(defined($i1))
+      {
+        if(!defined($iv{$n2}) || ($iv{$n2} ne $i1 && $i1_strong && !$iv_strong{$n2}))
+        {
+          verb "Setting: $n2 <= $i1 (".($i1_strong?"strong":"weak").")\n";
+          $iv{$n2}=$i1; $iv_strong{$n2}=$i1_strong; $hadwork=1;
+        }
+      }
+      if(defined($i2))
+      {
+        if(!defined($iv{$n1}) || ($iv{$n1} ne $i2 && $i2_strong && !$iv_strong{$n1}))
+        {
+          verb "Setting: $n1 <= $i2 (".($i2_strong?"strong":"weak").")\n";
+          $iv{$n1}=$i2; $iv_strong{$n1}=$i2_strong; $hadwork=1;
+        }
+      }
+      push @nexttodo,$_ if((!defined($iv{$n1})) && (!defined($iv{$n2})));
     }
     if(!$hadwork)
     {
       verb "No further progress. Exiting.\n";
-      foreach(sort keys %iv)
-      {
-        verb "Status: $_ : $iv{$_}\n";
-      }
       last;
     }
     verb "Still to be done:\n@nexttodo\n\n";
@@ -188,6 +167,7 @@ foreach my $file(@ARGV)
     my %differential=();
 
     our %contact=();
+    my %adj=();
 
     # Here we are parsing all transistor lines for input-, output- and intermediate nets
     # But this is just a guess:
@@ -198,10 +178,17 @@ foreach my $file(@ARGV)
       $inputs{$1}=1 if(m/^[pn]mos\s*([A-W]+\d*)/);
       $intermediates{$1}=1 if(m/^[pn]mos.*([X-Y]\w*\d*)/);
       $outputs{$1}=1 if(m/^[pn]mos.*\w+ ([X-Z]\w*\d*)/);
-      if(m/^[pn]mos\s*(\w+) (\w+) (\w+)/)
+      if(m/^[pn]mos\s*(\w+) (\w+) (\w+)/i)
       {
+        my ($g, $d, $s) = ($1, $2, $3);
         $contact{$2}{$1}=1;
-        $contact{$3}{$1}=1;
+        push @{$adj{$g}}, [$d, 1] unless $d =~ m/^(vdd|gnd)$/i;
+        push @{$adj{$g}}, [$s, 1] unless $s =~ m/^(vdd|gnd)$/i;
+        if($d !~ m/^(vdd|gnd)$/i && $s !~ m/^(vdd|gnd)$/i)
+        {
+          push @{$adj{$d}}, [$s, 0];
+          push @{$adj{$s}}, [$d, 0];
+        }
       }
     }
     delete($outputs{"Y"}) if(defined($outputs{"Z"})); # If we have Z, then Y is an internal net and Z is the output net
@@ -215,6 +202,40 @@ foreach my $file(@ARGV)
     {
       @ins=split(" ",$1) if($line=~m/^\.inputs (\w.*)/i);
       @outs=split(" ",$1) if($line=~m/^\.outputs (\w.*)/i)
+    }
+    @original_ins = @ins;
+    $inputs{$_}=1 foreach(@ins);
+
+    # AUTOMATIC SEQUENTIAL DETECTION: Find feedback cycles
+    my @state_nets = ();
+    foreach my $start (keys %adj)
+    {
+      my %seen = ();
+      my @queue = map { [$_->[0], $_->[1]] } @{$adj{$start} || []};
+      my $is_sequential = 0;
+      while (@queue)
+      {
+        my $item = shift @queue;
+        my ($curr, $has_gate_edge) = @$item;
+        if ($curr eq $start && $has_gate_edge) { $is_sequential = 1; last; }
+        next if $seen{$curr}{$has_gate_edge};
+        $seen{$curr}{$has_gate_edge} = 1;
+        foreach my $next_item (@{$adj{$curr} || []})
+        {
+          push @queue, [$next_item->[0], $has_gate_edge || $next_item->[1]];
+        }
+      }
+      push @state_nets, $start if ($is_sequential);
+    }
+    if (@state_nets)
+    {
+       print STDERR "Sequential behavior detected. State nets: ".join(", ", @state_nets)."\n" if ($debug);
+       my %known_ins = map { $_ => 1 } @ins;
+       foreach my $s (@state_nets)
+       {
+         push @ins, $s unless $known_ins{$s};
+         $known_ins{$s} = 1;
+       }
     }
     $inputs{$_}=1 foreach(@ins);
 
@@ -371,13 +392,18 @@ EOF
       print $output;
 
       # Here we are using the truth function to calculate all network states for the given inputs:
-      my %res=truth(\@lines,\%values);
+      my %strong_inputs = map { $_ => 1 } @original_ins;
+      my %res=truth(\@lines,\%values, \%strong_inputs);
       # The result is a hash with the intermediate/output netnames as keys and the resulting values as values
      
       # Now we are analyzing the results
       foreach my $out (@outs)
       {
-	$res{$out}="HIGH-Z" if(!defined($res{$out}));
+	if(!defined($res{$out}))
+        {
+          $res{$out}="HIGH-Z";
+          $highz_seen = 1;
+        }
         $sum{$out}{$res{$out}}++; # We are counting the occurance of all output values of the whole truthtable to decide, which value is more often used, which helps to decide whether the function can be represented in a shorter way with a negation
 	my @a=();
 	foreach(@ins)
@@ -554,7 +580,8 @@ EOF
     
           # Here we are using the truth function to calculate all network states for the given inputs:
 	  # TODO: What is better? Doing the digital simulation again or caching the results?
-          my %newres=truth(\@lines,\%values);
+	  my %strong_inputs = map { $_ => 1 } @original_ins;
+          my %newres=truth(\@lines,\%values, \%strong_inputs);
 
           verb "# Now we are analyzing the results\n";
 	  #foreach my $out (@outs) # We already have a $out from the outer loop
@@ -652,6 +679,7 @@ EOF
     }
   }
 }
+print STDERR "WARNING: Potentially unresolved outputs (HIGH-Z) detected. This might indicate a design error.\n" if($highz_seen);
 print STDERR "Done.\n" if($debug);
 
 
