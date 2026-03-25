@@ -495,7 +495,7 @@ EOF
       }
       if($aoioaifound) # we have found several inputs that are always and/or'ed for this particular output
       {
-        #print "function: $out = AOI/OAI compressed: ";
+        verb "function: $out = AOI/OAI compressed: ";
         %results=();
 
         foreach(@ins)
@@ -539,7 +539,7 @@ EOF
 	    else
 	    {
               $onepart{$newinputs[$_]}=$newinputs[$_];
-              $values{$ins[$_]}=($gray&(1<<$_))?1:0;
+              $values{$newinputs[$_]}=($gray&(1<<$_))?1:0;
 	    }
           }
     
@@ -550,13 +550,13 @@ EOF
           }
           next if($ignoreinvalidinputs);
     
-	  #print $output;
+	  verb "# $output\n";
     
           # Here we are using the truth function to calculate all network states for the given inputs:
 	  # TODO: What is better? Doing the digital simulation again or caching the results?
           my %newres=truth(\@lines,\%values);
 
-          # Now we are analyzing the results
+          verb "# Now we are analyzing the results\n";
 	  #foreach my $out (@outs) # We already have a $out from the outer loop
 	  #{
             $newres{$out}="HIGH-Z" if(!defined($newres{$out}));
@@ -604,7 +604,7 @@ EOF
       }
       else
       {
-        # Handle non-AOI/OAI 
+        verb "Handle non-AOI/OAI\n";
   
         my $not=($sum{$out}{0}||0)>($sum{$out}{1}||0)?1:0;
         # If we have more 0 than 1 results, then the negated inverse is shorted: 
