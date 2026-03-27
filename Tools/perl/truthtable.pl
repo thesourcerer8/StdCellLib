@@ -11,10 +11,17 @@ our $format="text"; # html latex text liberty verilog testcad
 GetOptions ("debug" => \$debug,
 	    "v" => \$debug,
             "format=s" => \$format);
-
 our $highz_seen = 0;
 our @original_ins = ();
 
+sub vname
+{
+  my $n = shift;
+  $n =~ s/^(\d+)$/net_$1/;
+  return $n;
+}
+
+our %errorseen=();
 our $testcadcounter=1; # counts the inputs, only needed for testcad output
 
 # Convert a value to the gray code value:
@@ -28,7 +35,6 @@ sub verb # verbose debug output
   print $_[0] if($debug);
 }
 
-our %errorseen=();
 sub myerror($) # prints error messages just once
 {
   if(!defined($errorseen{$_[0]}))
@@ -126,9 +132,9 @@ sub truth
       verb "No further progress. Exiting.\n";
       last;
     }
-    verb "Still to be done:\n@nexttodo\n\n";
-    $done=1 if(!scalar(@nexttodo));
-    @todo=@nexttodo;
+    # Reset todo for next iteration to check ALL conducting transistors against updated voltages
+    @todo=@lines; 
+    $done=1 if(!$hadwork); # Should be redundant due to 'last'
   }
 
   verb "Results: "; verb "$_=$iv{$_} " foreach(sort keys %iv); verb "\n";
@@ -138,6 +144,138 @@ sub truth
 
   return %iv;
 }
+
+sub analyze_sequential {
+    my ($sccs_ref, $state_nets_ref, $orig_ins_ref, $ins_ref, $state_table_ref, $outs_ref) = @_;
+    my @orig_ins = @$orig_ins_ref;
+    my @ins = @$ins_ref;
+    my @outs = @$outs_ref;
+    my %st = %$state_table_ref;
+
+    my @seq_outs = grep { my $o = $_; grep { my $s = $_; grep { $_ eq $o } @$s } @$sccs_ref } @outs;
+    
+    # Try to find a specific sequence for the FIRST sequential output (usually there's only one primary Q)
+    foreach my $q (@seq_outs) {
+        my $q_idx = -1; foreach my $i (0..$#ins) { $q_idx = $i if $ins[$i] eq $q; }
+        next if $q_idx == -1;
+
+        foreach my $p_name (@orig_ins) {
+            my $p_idx = -1; foreach my $i (0..$#ins) { $p_idx = $i if $ins[$i] eq $p_name; }
+            
+            # Check for LATCH behavior on Q
+            my $is_en_h = 1; my $is_en_l = 1;
+            foreach my $gray (keys %{$st{$q}}) {
+                my $p_val = ($gray >> $p_idx) & 1;
+                my $q_prev = ($gray >> $q_idx) & 1;
+                my $q_next = $st{$q}{$gray};
+                next if $q_next eq "HIGH-Z";
+                if ($p_val == 0 && $q_next != $q_prev) { $is_en_h = 0; }
+                if ($p_val == 1 && $q_next != $q_prev) { $is_en_l = 0; }
+            }
+            if ($is_en_h || $is_en_l) {
+                # Found Latch behavior! Now find D input.
+                my $en_val = $is_en_h ? 1 : 0;
+                my $d_pin = ""; my $d_inv = 0;
+                foreach my $test_d (@orig_ins) {
+                    next if $test_d eq $p_name;
+                    my $t_idx = -1; foreach my $i (0..$#ins) { $t_idx = $i if $ins[$i] eq $test_d; }
+                    my $matches = 0; my $mismatches = 0; my $total = 0;
+                    foreach my $gray (keys %{$st{$q}}) {
+                        next if (($gray >> $p_idx) & 1) != $en_val;
+                        my $val = ($gray >> $t_idx) & 1;
+                        if ($st{$q}{$gray} eq $val) { $matches++; } else { $mismatches++; }
+                        $total++;
+                    }
+                    if ($total > 0 && $matches == $total) { $d_pin = vname($test_d); $d_inv = 0; last; }
+                    if ($total > 0 && $mismatches == $total) { $d_pin = vname($test_d); $d_inv = 1; last; }
+                }
+                if ($d_pin) {
+                    return { type => 'latch', enable => vname($p_name).($en_val?"":"'"), q => vname($q), d => ($d_inv ? "!$d_pin" : "$d_pin") };
+                }
+            }
+            
+            # Check for Flip-Flop behavior
+            # For FF, we look for a internal "master" SCC such that Q follows it on clock edge
+            foreach my $m_scc_ref (@$sccs_ref) {
+                # Skip if it's the same SCC as Q
+                next if grep { $_ eq $q } @$m_scc_ref;
+                # Try every node in master SCC as potential M
+                foreach my $m (@$m_scc_ref) {
+                    my $m_idx = -1; foreach my $i (0..$#ins) { $m_idx = $i if $ins[$i] eq $m; }
+                    next if $m_idx == -1;
+
+                    my $is_pos = 1; my $is_neg = 1; 
+                    my $is_inv_pos = -1; my $is_inv_neg = -1;
+                    foreach my $gray (keys %{$st{$q}}) {
+                        my $p_val = ($gray >> $p_idx) & 1;
+                        my $m_prev = ($gray >> $m_idx) & 1;
+                        my $q_prev = ($gray >> $q_idx) & 1;
+                        my $q_next = $st{$q}{$gray};
+                        next if $q_next eq "HIGH-Z";
+                        # POS: CLK=1 -> Q transparent (follows M_prev), CLK=0 -> Q holds
+                        if ($p_val == 1) {
+                            if ($is_inv_pos == -1) { $is_inv_pos = ($q_next == (1-$m_prev)) ? 1 : 0; }
+                            elsif ($is_inv_pos == 0 && $q_next != $m_prev) { $is_pos = 0; }
+                            elsif ($is_inv_pos == 1 && $q_next == $m_prev) { $is_pos = 0; }
+                            # For NEG, CLK=1 should hold
+                            if ($q_next != $q_prev) { $is_neg = 0; }
+                        } else { 
+                            # For POS, CLK=0 should hold
+                            if ($q_next != $q_prev) { $is_pos = 0; }
+                            # NEG: CLK=0 -> Q transparent (follows M_prev)
+                            if ($is_inv_neg == -1) { $is_inv_neg = ($q_next == (1-$m_prev)) ? 1 : 0; }
+                            elsif ($is_inv_neg == 0 && $q_next != $m_prev) { $is_neg = 0; }
+                            elsif ($is_inv_neg == 1 && $q_next == $m_prev) { $is_neg = 0; }
+                        }
+                    }
+                    if ($is_pos) {
+                        # Now find D for master M when CLK=0
+                        my $d_pin = ""; my $d_inv = 0;
+                        foreach my $test_d (@orig_ins) {
+                            next if $test_d eq $p_name;
+                            my $t_idx = -1; foreach my $i (0..$#ins) { $t_idx = $i if $ins[$i] eq $test_d; }
+                            my $matches = 0; my $mismatches = 0; my $total = 0;
+                            foreach my $gray (keys %{$st{$m}}) {
+                                next if (($gray >> $p_idx) & 1) != 0;
+                                my $val = ($gray >> $t_idx) & 1;
+                                if ($st{$m}{$gray} eq $val) { $matches++; } else { $mismatches++; }
+                                $total++;
+                            }
+                            if ($total > 0 && $matches == $total) { $d_pin = vname($test_d); $d_inv = $is_inv_pos; last; }
+                            if ($total > 0 && $mismatches == $total) { $d_pin = vname($test_d); $d_inv = 1 - $is_inv_pos; last; }
+                        }
+                        if ($d_pin) {
+                            return { type => 'ff', clocked_on => vname($p_name), q => vname($q), d => ($d_inv ? "!$d_pin" : "$d_pin") };
+                        }
+                    }
+                    if ($is_neg) {
+                        # Now find D for master M when CLK=1
+                        my $d_pin = ""; my $d_inv = 0;
+                        foreach my $test_d (@orig_ins) {
+                            next if $test_d eq $p_name;
+                            my $t_idx = -1; foreach my $i (0..$#ins) { $t_idx = $i if $ins[$i] eq $test_d; }
+                            my $matches = 0; my $mismatches = 0; my $total = 0;
+                            foreach my $gray (keys %{$st{$m}}) {
+                                next if (($gray >> $p_idx) & 1) != 1;
+                                my $val = ($gray >> $t_idx) & 1;
+                                if ($st{$m}{$gray} eq $val) { $matches++; } else { $mismatches++; }
+                                $total++;
+                            }
+                            if ($total > 0 && $matches == $total) { $d_pin = vname($test_d); $d_inv = $is_inv_neg; last; }
+                            if ($total > 0 && $mismatches == $total) { $d_pin = vname($test_d); $d_inv = 1 - $is_inv_neg; last; }
+                        }
+                        if ($d_pin) {
+                            return { type => 'ff', clocked_on => "!".vname($p_name), q => vname($q), d => ($d_inv ? "!$d_pin" : "$d_pin") };
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+    return { type => 'statetable' };
+}
+
 
 
 if(!scalar(@ARGV)) # no parameters were given
@@ -157,7 +295,7 @@ foreach my $file(@ARGV)
   # Open each file
   if(open(IN,"<$file"))
   {
-    print STDERR "Analyzing $file\n" if($debug);
+    verb "Analyzing $file\n";
     my @lines=<IN>; # Read all lines into an array
     close IN;
 
@@ -206,33 +344,74 @@ foreach my $file(@ARGV)
     @original_ins = @ins;
     $inputs{$_}=1 foreach(@ins);
 
-    # AUTOMATIC SEQUENTIAL DETECTION: Find feedback cycles
-    my @state_nets = ();
-    foreach my $start (keys %adj)
+    # AUTOMATIC SEQUENTIAL DETECTION: Find feedback cycles and pick minimal state nets
+    my %net_to_scc = ();
+    my @sccs = ();
+    foreach my $start (sort keys %adj)
     {
-      my %seen = ();
-      my @queue = map { [$_->[0], $_->[1]] } @{$adj{$start} || []};
-      my $is_sequential = 0;
-      while (@queue)
-      {
-        my $item = shift @queue;
-        my ($curr, $has_gate_edge) = @$item;
-        if ($curr eq $start && $has_gate_edge) { $is_sequential = 1; last; }
-        next if $seen{$curr}{$has_gate_edge};
-        $seen{$curr}{$has_gate_edge} = 1;
-        foreach my $next_item (@{$adj{$curr} || []})
-        {
-          push @queue, [$next_item->[0], $has_gate_edge || $next_item->[1]];
+      next if defined $net_to_scc{$start};
+      my %reachable = ();
+      my @queue = ($start);
+      while (@queue) {
+        my $curr = shift @queue;
+        next if $reachable{$curr};
+        $reachable{$curr} = 1;
+        push @queue, map { $_->[0] } @{$adj{$curr} || []};
+      }
+      
+      my %back_reachable = ();
+      @queue = ($start);
+      while (@queue) {
+        my $curr = shift @queue;
+        next if $back_reachable{$curr};
+        $back_reachable{$curr} = 1;
+        # For back-reachability, we check who has $curr as an adjacency
+        foreach my $node (keys %adj) {
+          foreach my $edge (@{$adj{$node}}) {
+            push @queue, $node if $edge->[0] eq $curr;
+          }
         }
       }
-      push @state_nets, $start if ($is_sequential);
+      
+      my @scc = grep { $back_reachable{$_} } keys %reachable;
+      if (scalar(@scc) > 1 || (scalar(@scc) == 1 && grep { $_->[0] eq $start && $_->[1] } @{$adj{$start} || []})) {
+        # Valid SCC found. Is it actually sequential? (Must have at least one gate edge)
+        my $seq = 0;
+        foreach my $u (@scc) {
+          foreach my $edge (@{$adj{$u}}) {
+             $seq = 1 if $edge->[1] && grep { $_ eq $edge->[0] } @scc;
+          }
+        }
+        if ($seq) {
+          push @sccs, \@scc;
+          $net_to_scc{$_} = $#sccs foreach @scc;
+        }
+      }
     }
+
+    my @state_nets = ();
+    my %is_out = map { $_ => 1 } @outs;
+    foreach my $scc_ref (@sccs) {
+      my %in_scc = map { $_ => 1 } @$scc_ref;
+      # Count how many gate-edges each node drives toward other in-SCC nodes.
+      # This identifies true state-holding nodes (inverter outputs, not transmission gate wires).
+      my %gate_fanout = ();
+      foreach my $n (@$scc_ref) {
+        $gate_fanout{$n} = scalar(grep { $_->[1] && $in_scc{$_->[0]} } @{$adj{$n} || []});
+      }
+      my @sorted_scc = sort { 
+         ($is_out{$b} || 0) <=> ($is_out{$a} || 0) ||
+         ($gate_fanout{$b} || 0) <=> ($gate_fanout{$a} || 0) ||
+         $a cmp $b 
+      } @$scc_ref;
+      push @state_nets, $sorted_scc[0];
+    }
+
     if (@state_nets)
     {
-       print STDERR "Sequential behavior detected. State nets: ".join(", ", @state_nets)."\n" if ($debug);
+       verb "Sequential behavior detected. State nets: ".join(", ", map { @$_ } @sccs)."\n";
        my %known_ins = map { $_ => 1 } @ins;
-       foreach my $s (@state_nets)
-       {
+       foreach my $s (@state_nets) {
          push @ins, $s unless $known_ins{$s};
          $known_ins{$s} = 1;
        }
@@ -245,6 +424,19 @@ foreach my $file(@ARGV)
       $insmap{$ins[$i]}=$i;
     }
 
+    our @nets_to_analyze = @outs;
+    if ($format eq "verilog")
+    {
+       my %seen_nets = map { $_ => 1 } @outs;
+       my %skip_nets = map { $_ => 1 } @original_ins;
+       foreach my $s (@ins)
+       {
+         next if $skip_nets{$s} || $seen_nets{$s};
+         push @nets_to_analyze, $s;
+         $seen_nets{$s} = 1;
+       }
+    }
+
     foreach my $a(@ins)
     {
       if($a=~m/_n$/)
@@ -253,7 +445,7 @@ foreach my $file(@ARGV)
         if(defined($inputs{$b}))
 	{
           $differential{$a}=$b;
-	  #print STDERR "Differential input detected: $a <-> $b\n";
+	        verb "Differential input detected: $a <-> $b\n";
 	}
       }
     }
@@ -295,6 +487,30 @@ foreach my $file(@ARGV)
     if($format eq "text")
     {
       print join(" ",@ins)."->".join(" ",@outs); print "\n";
+    }
+    elsif($format eq "liberty")
+    {
+      print "cell ($cellname) {\n";
+      foreach my $in (@original_ins)
+      {
+         print "  pin(".vname($in).") {\n    direction: input;\n  }\n";
+      }
+    }
+    elsif($format eq "verilog")
+    {
+      my %orig_in_set = map { $_ => 1 } @original_ins;
+      my %out_set = map { $_ => 1 } @outs;
+      print "module $cellname (\n";
+      print "  input " . join(", ", map { vname($_) } @original_ins) . ",\n";
+      print "  output " . join(", ", map { vname($_) } @outs) . "\n";
+      print ");\n\n";
+
+      # Declare internal state nets as wires
+      foreach my $s (@ins)
+      {
+        next if $orig_in_set{$s} || $out_set{$s};
+        print "  wire ".vname($s).";\n";
+      }
     }
     elsif($format eq "latex")
     {
@@ -365,6 +581,8 @@ EOF
     my %values=();
     our %sum=();
     our %results=();
+    our %state_table=();
+    my $statetable_rows = "";
     # Now we calculate all the truth-table values:
     foreach my $i(0 .. 2**$ninputs-1)
     {
@@ -377,7 +595,7 @@ EOF
       {
 	$output.="& " if($format eq "latex" && $_>0);
         $output.="<td>" if($format eq "html");
-        $output.="".($gray&(1<<$_))?"1 ":"0 " if($format eq "text" || $format eq "latex" || $format eq "html"); # not for liberty!
+        $output.="".($gray&(1<<$_))?"1 ":"0 " if($format eq "text" || $format eq "latex" || $format eq "html");
         $output.="</td>" if($format eq "html");
 	$values{$ins[$_]}=($gray&(1<<$_))?1:0;
       }
@@ -393,11 +611,20 @@ EOF
 
       # Here we are using the truth function to calculate all network states for the given inputs:
       my %strong_inputs = map { $_ => 1 } @original_ins;
-      my %res=truth(\@lines,\%values, \%strong_inputs);
+      my %res;
+      eval { %res = truth(\@lines,\%values, \%strong_inputs); };
+      if ($@) {
+        verb "Skipping invalid state combination: $@";
+        next;
+      }
+      foreach my $scc_ref (@sccs) {
+          foreach (@$scc_ref) { $state_table{$_}{$gray} = $res{$_}; }
+      }
       # The result is a hash with the intermediate/output netnames as keys and the resulting values as values
      
       # Now we are analyzing the results
-      foreach my $out (@outs)
+
+    foreach my $out (@nets_to_analyze)
       {
 	if(!defined($res{$out}))
         {
@@ -406,11 +633,14 @@ EOF
         }
         $sum{$out}{$res{$out}}++; # We are counting the occurance of all output values of the whole truthtable to decide, which value is more often used, which helps to decide whether the function can be represented in a shorter way with a negation
 	my @a=();
+        my $not_char = ($format eq "verilog") ? "~" : "!";
 	foreach(@ins)
 	{
-          push @a,$res{$_}?"$_":"(!$_)"; # Here we are collecting all values for a AO representation, e.g. (A && !B && C) || (!A && B && C))  "Sum-of-Product"
+          my $name = ($format eq "verilog" || $format eq "liberty") ? vname($_) : $_;
+          push @a,$res{$_}?"$name":"($not_char$name)"; # Here we are collecting all values for a AO representation
 	}
-	push @{$results{$out}{$res{$out}}},join($format eq "liberty"?"&":" && ",@a); # Here the single values are put together: (A && !B && C)   "Sum-of-Product"
+        my $and_sep = ($format eq "liberty" || $format eq "verilog") ? " & " : " && ";
+	push @{$results{$out}{$res{$out}}},join($and_sep, @a); # Here the single values are put together: (A && !B && C)   "Sum-of-Product"
 
 
         # Now we are specifically checking for AOI/OAI
@@ -461,6 +691,17 @@ EOF
 
       } # foreach $out outputs
 
+      if ($format eq "liberty" && @state_nets)
+      {
+        my @in_vals = ();
+        foreach (@original_ins) { push @in_vals, $values{$_} ? "H" : "L"; }
+        my @state_vals = ();
+        foreach (@state_nets) { push @state_vals, $values{$_} ? "H" : "L"; }
+        my @next_vals = ();
+        foreach (@state_nets) { push @next_vals, $res{$_} ? "H" : "L"; }
+        $statetable_rows .= "           " . join(" ", @in_vals) . " : " . join(" ", @state_vals) . " : " . join(" ", @next_vals) . " ,\\\n";
+      }
+
       if($format eq "text")
       {
         print "$_=$res{$_} " foreach(@outs); 
@@ -480,9 +721,38 @@ EOF
     } # foreach $i all input combinations
 
     print "</table>\n" if($format eq "html");
+    if ($format eq "liberty" && @state_nets)
+    {
+      my $seq = analyze_sequential(\@sccs, \@state_nets, \@original_ins, \@ins, \%state_table, \@outs);
+      if ($seq->{type} eq 'latch')
+      {
+         # Special LATCH group
+         print "  latch (IQ_".vname($seq->{q}).", IQN_".vname($seq->{q}).") {\n";
+         print "    enable : \"$seq->{enable}\" ;\n";
+         print "    data_in : \"$seq->{d}\" ;\n";
+         print "  }\n";
+      }
+      elsif ($seq->{type} eq 'ff')
+      {
+         # Special FF group
+         print "  ff (IQ_".vname($seq->{q}).", IQN_".vname($seq->{q}).") {\n";
+         print "    clocked_on : \"$seq->{clocked_on}\" ;\n";
+         print "    next_state : \"$seq->{d}\" ;\n";
+         print "  }\n";
+      }
+      else
+      {
+        # Fallback to STATETABLE
+        my $in_names = join(" ", map { vname($_) } @original_ins);
+        my $next_names = join(" ", map { "IQ_".vname($_) } @state_nets);
+        $statetable_rows =~ s/ ,\\\n$/ /; # Fix trailing comma
+        print "  statetable (\"$in_names\", \"$next_names\") {\n";
+        print "    table : \"$statetable_rows\" ;\n";
+        print "  }\n";
+      }
+    }
 
-
-    foreach my $out (@outs) # We might have more than one output of a cell
+    foreach my $out (@nets_to_analyze) # We might have more than one output of a cell
     {
 
       # Finally checking whether we can compress the function for AOI/OAI here:
@@ -490,7 +760,19 @@ EOF
       my @newinputs=();
       my %lookup=();
       my $aoioaifound=0;
-      
+
+      my $is_state = 0;
+      my $is_primary_state = 0;
+      if ($format eq "liberty" && @state_nets) {
+          my $seq = analyze_sequential(\@sccs, \@state_nets, \@original_ins, \@ins, \%state_table, \@outs);
+          if (($seq->{type} eq 'latch' || $seq->{type} eq 'ff') && vname($out) eq $seq->{q}) {
+              $is_state = 1;
+              $is_primary_state = 1;
+          } elsif (grep { $_ eq $out } @state_nets) {
+              $is_state = 1;
+          }
+      }
+
       foreach my $first(sort keys %{$isgood{$out}})
       {
         foreach my $second(sort keys %{$isgood{$out}{$first}})
@@ -522,7 +804,7 @@ EOF
       if($aoioaifound) # we have found several inputs that are always and/or'ed for this particular output
       {
         verb "function: $out = AOI/OAI compressed: ";
-        %results=();
+        delete $results{$out};
 
         foreach(@ins)
         {
@@ -552,7 +834,7 @@ EOF
           {
             $output.="& " if($format eq "latex" && $_>0);
             $output.="<td>" if($format eq "html");
-            $output.="".($gray&(1<<$_))?"1 ":"0 " if($format eq "text" || $format eq "latex" || $format eq "html"); # not for liberty!
+            $output.="".($gray&(1<<$_))?"1 ":"0 " if($format eq "text" || $format eq "latex" || $format eq "html");
             $output.="</td>" if($format eq "html");
 	    if($newinputs[$_]=~m/[\&\|]/)
 	    {
@@ -581,19 +863,25 @@ EOF
           # Here we are using the truth function to calculate all network states for the given inputs:
 	  # TODO: What is better? Doing the digital simulation again or caching the results?
 	  my %strong_inputs = map { $_ => 1 } @original_ins;
-          my %newres=truth(\@lines,\%values, \%strong_inputs);
+          my %newres;
+          eval { %newres = truth(\@lines,\%values, \%strong_inputs); };
+          if ($@) { next; }
 
           verb "# Now we are analyzing the results\n";
 	  #foreach my $out (@outs) # We already have a $out from the outer loop
 	  #{
             $newres{$out}="HIGH-Z" if(!defined($newres{$out}));
             $newsum{$out}{$newres{$out}}++; # We are counting the occurance of all output values of the whole truthtable to decide, which value is more often used, which helps to decide whether the function can be represented in a shorter way with a negation
-            my @a=();
+            my @a = ();
+            my $not_char = ($format eq "verilog") ? "~" : "!";
+            my %out_set = (map { $_ => 1 } @outs);
             foreach(@newinputs)
             {
-              push @a,$newres{$onepart{$_}}?"($_)":"(!($_))"; # Here we are collecting all values for a AO representation, e.g. (A && !B && C) || (!A && B && C))  "Sum-of-Product"
+              my $name = ($format eq "verilog" || $format eq "liberty") ? vname($_) : $_;
+              push @a,$newres{$onepart{$_}}?"($name)":"($not_char($name))"; # Here we are collecting all values for a AO representation
             }
-            push @{$results{$out}{$newres{$out}}},join($format eq "liberty"?"&":" && ",@a); # Here the single values are put together: (A && !B && C)   "Sum-of-Product"
+            my $and_sep = ($format eq "liberty" || $format eq "verilog") ? " & " : " && ";
+            push @{$results{$out}{$newres{$out}}},join($and_sep, @a); # Here the single values are put together: (A && !B && C)   "Sum-of-Product"
           #} 
 	  #print "\@a: ".join("&",@a)."\n";
 
@@ -604,7 +892,20 @@ EOF
         # TODO: When there are HIGH-Z outputs we should split the HIGH-Z outputs from the others and give a function for output-enable and HIGH-Z
         if($format eq "liberty")
         {
-          print "  pin($out) {\n    direction: output;\n    function:\"";
+          print "  pin(".vname($out).") {\n    direction: output;\n";
+          if ($is_state)
+          {
+            print "    function: \"IQ_".vname($out)."\";\n";
+            print "    internal_node: \"IQ_".vname($out)."\";\n" unless $is_primary_state;
+          }
+          else
+          {
+            print "    function: \"";
+          }
+        }
+        elsif($format eq "verilog")
+        {
+          print "  assign ".vname($out)." = ";
         }
         elsif($format eq "testcad")
         {
@@ -614,31 +915,47 @@ EOF
           print "function: $out = ";
         }
         my @list=defined($results{$out}{$not})?@{$results{$out}{$not}}:();
-        if(!scalar(@list))
+        my $sep = ($format eq "liberty" || $format eq "verilog") ? " | " : " || ";
+        if(!scalar(@list) || $is_state)
         {
         }
         elsif($not)
         {
-          print "(".join($format eq "liberty"?"|":" || ",@list).")";
+          print "(".join($sep,@list).")";
         }
         else
         {
-          print "!(".join($format eq "liberty"?"|":" || ",@list).")";
+          my $not_op = ($format eq "verilog") ? "~" : "!";
+          print "$not_op(".join($sep,@list).")";
         }
+
  
 
         # End of AOI/OAI checks
       }
       else
       {
-        verb "Handle non-AOI/OAI\n";
+        verb "DEBUG: Handle non-AOI/OAI for out='$out', format='$format'\n";
   
         my $not=($sum{$out}{0}||0)>($sum{$out}{1}||0)?1:0;
         # If we have more 0 than 1 results, then the negated inverse is shorted: 
         # TODO: When there are HIGH-Z outputs we should split the HIGH-Z outputs from the others and give a function for output-enable and HIGH-Z
         if($format eq "liberty")
         {
-          print "  pin($out) {\n    direction: output;\n    function:\"";
+          print "  pin(".vname($out).") {\n    direction: output;\n";
+          if ($is_state)
+          {
+            print "    function: \"IQ_".vname($out)."\";\n";
+            print "    internal_node: \"IQ_".vname($out)."\";\n" unless $is_primary_state;
+          }
+          else
+          {
+            print "    function: \"";
+          }
+        }
+        elsif($format eq "verilog")
+        {
+          print "  assign ".vname($out)." = ";
         }
         elsif($format eq "testcad")
         {
@@ -647,26 +964,36 @@ EOF
         {
           print "function: $out = ";
         }
+        $is_state = ($format eq "liberty" && grep { $_ eq $out } @state_nets) ? 1 : $is_state;
         my @list=defined($results{$out}{$not})?@{$results{$out}{$not}}:();
-        if(!scalar(@list))
+        my $sep = ($format eq "liberty" || $format eq "verilog") ? " | " : " || ";
+        if(!scalar(@list) || $is_state)
         {
+          # No SOP for empty list or Liberty state pins (handled by statetable)
         }
         elsif($not)
         {
-          print "(".join($format eq "liberty"?"|":" || ",@list).")";
+          print "(".join($sep,@list).")";
         }
         else
         {
-          print "!(".join($format eq "liberty"?"|":" || ",@list).")";
+          my $not_op = ($format eq "verilog") ? "~" : "!";
+          print "$not_op(".join($sep,@list).")";
         }
   
       }
-      print $format eq "liberty" ? "\";\n  }":" ";
-      print $format eq "verilog" ? "\n":"\n";
+      if ($format eq "liberty")
+      {
+        print "\";\n" unless $is_state;
+        print "  }\n";
+      }
+      print ";" if($format eq "verilog");
+      print "\n";
       # TODO: We should try more functional representations like AOI, OAI, OR, NOR and see which one is the shortest representation
     }
 
-    print "\n" if($format eq "liberty");
+    print "endmodule\n\n" if($format eq "verilog");
+    print "}\n\n" if($format eq "liberty");
     if($format eq "latex")
     {
       print <<EOF
@@ -679,7 +1006,7 @@ EOF
     }
   }
 }
-print STDERR "WARNING: Potentially unresolved outputs (HIGH-Z) detected. This might indicate a design error.\n" if($highz_seen);
-print STDERR "Done.\n" if($debug);
+verb "WARNING: Potentially unresolved outputs (HIGH-Z) detected. This might indicate a design error.\n" if($highz_seen);
+verb "Done.\n";
 
 
