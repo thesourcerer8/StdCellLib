@@ -32,8 +32,8 @@ our $name="UNNAMED";
 our $pins="";
 
 # Defines whether pins are inputs or outputs since SPICE does not have that concept
-my %iomap=('A'=>'I','B'=>'I','C'=>'I','CN'=>'I','CLK'=>'I','D'=>'I','EN'=>'I','Q'=>'O','R'=>'I','S'=>'I','Y'=>'O','YC'=>'O','YS'=>'O','gnd'=>'','vdd'=>'','GND'=>'','VDD'=>'','Z'=>'O','DI'=>'I','DO'=>'O','OEN'=>'I','YPAD'=>'O','gnd2'=>'','vdd2'=>'','GND2'=>'','VDD2'=>'','vss'=>'','VSS'=>'');
-my %mosmap=('pfet'=>'pmos','nfet'=>'nmos','nmos'=>'nmos','pmos'=>'pmos','hnfet'=>'nmos','hpfet'=>'pmos','enbsim3'=>'nmos','epbsim3'=>'pmos','sky130_fd_pr__nfet_01v8'=>'nmos','sky130_fd_pr__pfet_01v8'=>'pmos');
+my %iomap=('A'=>'I','B'=>'I','C'=>'I','CN'=>'I','CLK'=>'I','D'=>'I','EN'=>'I','Q'=>'O','R'=>'I','S'=>'I','Y'=>'O','YC'=>'O','YS'=>'O','gnd'=>'','vdd'=>'','GND'=>'','VDD'=>'','Z'=>'O','DI'=>'I','DO'=>'O','OEN'=>'I','YPAD'=>'O','gnd2'=>'','vdd2'=>'','GND2'=>'','VDD2'=>'','vss'=>'','VSS'=>'','A1'=>'I','A2'=>'I','A3'=>'I','A4'=>'I','S0'=>'I','S1'=>'I','S2'=>'I','S3'=>'I','X'=>'O','A0'=>'I','VPWR'=>'','VGND'=>'','VNB'=>'','VPB'=>'');
+my %mosmap=('pfet'=>'pmos','nfet'=>'nmos','nmos'=>'nmos','pmos'=>'pmos','hnfet'=>'nmos','hpfet'=>'pmos','enbsim3'=>'nmos','epbsim3'=>'pmos','sky130_fd_pr__nfet_01v8'=>'nmos','sky130_fd_pr__pfet_01v8'=>'pmos','VPB'=>'pmos','VNB'=>'nmos');
 our %internalnets=();
 our $internalcounter=0;
 our $OUT;
@@ -55,6 +55,14 @@ sub internal2($)
   $internalnets{$in}=$internalcounter++ if(!defined($internalnets{$in}));
   return $internalnets{$in};
 }
+sub internal3($)
+{
+  my $in=$_[0];
+  $in=~s/^N_//;
+  $in=~s/_M\d+_g$//;
+  return internal2($in);
+}
+
 
 if($ARGV[0] && open IN,"<$ARGV[0]")
 {
@@ -107,6 +115,14 @@ if($ARGV[0] && open IN,"<$ARGV[0]")
       $g=internal2($g);
       $d=internal2($d);
       $s=internal2($s);
+      print $OUT $mosmap{$m}." $g $d $s\n";
+    }
+    elsif(m/^MM\d+ (\S+) (\S+) (\S+) (\S+)/)
+    {
+      my ($g,$d,$s,$m)=($2,$1,$3,$4);
+      $g=internal3($g);
+      $d=internal3($d);
+      $s=internal3($s);
       print $OUT $mosmap{$m}." $g $d $s\n";
     }
     elsif(m/^R\w+\@\d+ (\w+\@?\d*) (\w+\@?\d*) (\d+\.?\d*)/)
