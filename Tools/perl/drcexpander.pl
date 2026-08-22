@@ -180,6 +180,10 @@ if($debug)
       print OUT "puts \"CUT HERE -------- CUT HERE\"\n";
       foreach(sort keys %alias)
       {
+        # Layer/type-list names are [A-Za-z0-9_] segments joined by ',' or '/'.
+        # Never let any other character reach the Tcl script piped into magic
+        # (quote/semicolon/bracket/dollar injection -> command execution).
+        next unless(m/^[A-Za-z0-9_]+(?:[,\/][A-Za-z0-9_]+)*$/);
 	s/\(// unless(m/\)/);
 	s/\)// unless(m/\(/);
 	#print STDERR "[tech layers $_]\n";
